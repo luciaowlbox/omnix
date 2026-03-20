@@ -2,6 +2,27 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
+<script>
+(function(){
+  var KEY='omnix_auth', PASS='Owlbox&Omnix481';
+  function init() {
+    if (sessionStorage.getItem(KEY)==='1') return;
+    document.documentElement.style.visibility='hidden';
+    document.addEventListener('DOMContentLoaded', function(){
+      document.body.innerHTML='<div id="as" style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:#0D0818;font-family:Nunito,sans-serif;"><div style="background:#160D22;border:1px solid rgba(127,123,156,0.25);border-radius:16px;padding:40px 44px;width:100%;max-width:380px;text-align:center;"><div style="width:48px;height:48px;margin:0 auto 20px;background:#3E0F58;border-radius:8px 8px 8px 20px;display:flex;align-items:center;justify-content:center;"><svg width=\'22\' height=\'22\' viewBox=\'0 0 22 22\' fill=\'none\'><rect x=\'4\' y=\'10\' width=\'14\' height=\'10\' rx=\'3\' stroke=\'#2FC1A5\' stroke-width=\'1.5\'/><path d=\'M7 10V7a4 4 0 0 1 8 0v3\' stroke=\'#2FC1A5\' stroke-width=\'1.5\' stroke-linecap=\'round\'/><circle cx=\'11\' cy=\'15\' r=\'1.5\' fill=\'#2FC1A5\'/></svg></div><div style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.14em;margin-bottom:6px;">Owlbox · Documento restringido</div><div style="font-size:20px;font-weight:800;color:#fff;margin-bottom:6px;letter-spacing:-0.5px;">OMNIX</div><div style="font-size:13px;color:#7F7B9C;margin-bottom:28px;">Plan Estratégico de Negocio</div><input id=\'pwd\' type=\'password\' placeholder=\'Contraseña de acceso\' style=\'width:100%;padding:12px 16px;background:rgba(62,15,88,0.4);border:1px solid rgba(127,123,156,0.3);border-radius:10px;color:#EDE8F5;font-size:14px;outline:none;margin-bottom:10px;box-sizing:border-box;\' onkeydown=\'if(event.key==="Enter")tryLogin()\' /><div id=\'ae\' style=\'font-size:12px;color:#FF421E;margin-bottom:10px;min-height:18px;font-weight:600;\'></div><button onclick=\'tryLogin()\' style=\'width:100%;padding:12px;background:#2FC1A5;color:#0D0818;border:none;border-radius:10px;font-size:14px;font-weight:800;cursor:pointer;\'>Ingresar &rarr;</button><div style=\'font-size:11px;color:rgba(127,123,156,0.4);margin-top:20px;\'>owlbox.io &middot; Acceso autorizado &uacute;nicamente</div></div></div>';
+      document.getElementById('pwd').focus();
+      document.documentElement.style.visibility='visible';
+    });
+  }
+  window.tryLogin=function(){
+    var v=document.getElementById('pwd').value;
+    var e=document.getElementById('ae');
+    if(v===PASS){sessionStorage.setItem(KEY,'1');location.reload();}
+    else{e.textContent='Contraseña incorrecta. Intentá de nuevo.';document.getElementById('pwd').value='';document.getElementById('pwd').focus();}
+  };
+  init();
+})();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Omnix — Plan Estratégico · Owlbox</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
