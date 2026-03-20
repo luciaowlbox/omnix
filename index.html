@@ -3,826 +3,1196 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Omnix — Plan Estratégico</title>
+<title>Omnix — Plan Estratégico · Owlbox</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Ubuntu:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap');
-  :root {
-    --bg:#0A0A10;--surface:#111118;--surface2:#18181F;--border:rgba(255,255,255,0.07);
-    --border2:rgba(255,255,255,0.12);--accent:#00E5C0;--accent2:#5B6EF5;
-    --text:#E8E8F0;--muted:#7A7A9A;--muted2:#4A4A6A;
-    --success:#22C55E;--warning:#F59E0B;--danger:#EF4444;--info:#3B82F6;
-  }
-  *{box-sizing:border-box;margin:0;padding:0;}
-  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.7;}
-  .layout{display:flex;min-height:100vh;}
-  .sidebar{width:270px;background:var(--surface);border-right:1px solid var(--border);position:fixed;top:0;left:0;bottom:0;overflow-y:auto;z-index:100;display:flex;flex-direction:column;}
-  .sidebar-brand{padding:24px 20px 18px;border-bottom:1px solid var(--border);}
-  .sidebar-logo{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;letter-spacing:-1px;color:#fff;}
-  .sidebar-logo span{color:var(--accent);}
-  .sidebar-doc-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-top:4px;font-weight:500;}
-  .sidebar-version{font-size:10px;color:var(--muted2);margin-top:2px;}
-  .sidebar-nav{padding:12px 0;flex:1;}
-  .nav-group{margin-bottom:4px;}
-  .nav-group-label{font-size:10px;font-weight:600;color:var(--muted2);text-transform:uppercase;letter-spacing:0.12em;padding:10px 20px 4px;}
-  .nav-item{display:flex;align-items:center;gap:10px;padding:7px 20px;cursor:pointer;color:var(--muted);font-size:13px;transition:all 0.15s;border-left:2px solid transparent;text-decoration:none;user-select:none;}
-  .nav-item:hover{color:var(--text);background:rgba(255,255,255,0.03);}
-  .nav-item.active{color:var(--accent);border-left-color:var(--accent);background:rgba(0,229,192,0.06);font-weight:500;}
-  .nav-sub{display:flex;align-items:center;gap:10px;padding:5px 20px 5px 36px;cursor:pointer;color:var(--muted2);font-size:12px;transition:all 0.15s;border-left:2px solid transparent;text-decoration:none;user-select:none;}
-  .nav-sub:hover{color:var(--muted);background:rgba(255,255,255,0.02);}
-  .nav-sub.active{color:rgba(0,229,192,0.8);border-left-color:rgba(0,229,192,0.4);}
-  .nav-dot{width:5px;height:5px;border-radius:50%;background:currentColor;opacity:0.5;flex-shrink:0;}
-  .nav-item.active .nav-dot,.nav-sub.active .nav-dot{opacity:1;}
-  .sidebar-footer{padding:14px 20px;border-top:1px solid var(--border);font-size:11px;color:var(--muted2);}
-  .main{margin-left:270px;flex:1;padding:40px 52px;max-width:calc(100vw - 270px);}
-  .section{display:none;animation:fadeIn 0.2s ease;}
-  .section.active{display:block;}
-  @keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
-  .section-header{margin-bottom:30px;padding-bottom:22px;border-bottom:1px solid var(--border);}
-  .section-tag{font-size:11px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;}
-  .section-title{font-family:'Syne',sans-serif;font-size:26px;font-weight:700;color:#fff;line-height:1.2;margin-bottom:10px;}
-  .section-subtitle{font-size:14px;color:var(--muted);line-height:1.6;max-width:680px;}
-  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:22px;}
-  .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:22px;}
-  .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:22px;}
-  .card{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:16px 18px;}
-  .card-title{font-size:13px;font-weight:500;color:#fff;margin-bottom:6px;}
-  .card-body{font-size:13px;color:var(--muted);line-height:1.6;}
-  .card-body strong{color:var(--text);font-weight:500;}
-  .badge{display:inline-block;font-size:10px;font-weight:600;padding:2px 9px;border-radius:20px;margin-bottom:7px;text-transform:uppercase;letter-spacing:0.06em;}
-  .ba{background:rgba(0,229,192,0.12);color:var(--accent);border:1px solid rgba(0,229,192,0.2);}
-  .bb{background:rgba(59,130,246,0.12);color:#60A5FA;border:1px solid rgba(59,130,246,0.2);}
-  .bw{background:rgba(245,158,11,0.12);color:#FCD34D;border:1px solid rgba(245,158,11,0.2);}
-  .bd{background:rgba(239,68,68,0.12);color:#FCA5A5;border:1px solid rgba(239,68,68,0.2);}
-  .bs{background:rgba(34,197,94,0.12);color:#86EFAC;border:1px solid rgba(34,197,94,0.2);}
-  .bm{background:rgba(255,255,255,0.05);color:var(--muted);border:1px solid var(--border2);}
-  .bp{background:rgba(91,110,245,0.12);color:#A5B4FC;border:1px solid rgba(91,110,245,0.2);}
-  .highlight-box{background:rgba(0,229,192,0.05);border:1px solid rgba(0,229,192,0.15);border-radius:10px;padding:14px 18px;margin-bottom:18px;font-size:13px;line-height:1.65;color:var(--text);}
-  .highlight-box strong{color:var(--accent);font-weight:500;}
-  .warn-box{background:rgba(245,158,11,0.05);border:1px solid rgba(245,158,11,0.15);border-radius:10px;padding:14px 18px;margin-bottom:18px;font-size:13px;line-height:1.65;color:var(--text);}
-  .warn-box strong{color:#FCD34D;font-weight:500;}
-  .info-box{background:rgba(59,130,246,0.05);border:1px solid rgba(59,130,246,0.15);border-radius:10px;padding:14px 18px;margin-bottom:18px;font-size:13px;line-height:1.65;color:var(--text);}
-  .info-box strong{color:#60A5FA;font-weight:500;}
-  .danger-box{background:rgba(239,68,68,0.05);border:1px solid rgba(239,68,68,0.15);border-radius:10px;padding:14px 18px;margin-bottom:18px;font-size:13px;line-height:1.65;color:var(--text);}
-  .danger-box strong{color:#FCA5A5;font-weight:500;}
-  h3{font-family:'Syne',sans-serif;font-size:15px;font-weight:600;color:#fff;margin:22px 0 10px;}
-  h3:first-child{margin-top:0;}
-  h4{font-size:13px;font-weight:500;color:#fff;margin:14px 0 6px;}
-  .divider{height:1px;background:var(--border);margin:26px 0;}
-  .metric-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;}
-  .metric-value{font-family:'Syne',sans-serif;font-size:22px;font-weight:700;color:var(--accent);margin-bottom:3px;}
-  .metric-label{font-size:11px;color:var(--muted);}
-  .data-table{width:100%;border-collapse:collapse;margin-bottom:22px;font-size:13px;}
-  .data-table th{text-align:left;padding:9px 12px;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;border-bottom:1px solid var(--border2);background:var(--surface2);}
-  .data-table td{padding:10px 12px;border-bottom:1px solid var(--border);color:var(--text);vertical-align:middle;}
-  .data-table tr:last-child td{border-bottom:none;}
-  .data-table tr:hover td{background:rgba(255,255,255,0.02);}
-  .price-val{font-family:'Syne',sans-serif;font-weight:600;color:#fff;white-space:nowrap;}
-  .roadmap-item{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--border);align-items:flex-start;}
-  .roadmap-item:last-child{border-bottom:none;}
-  .roadmap-phase{min-width:90px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;text-align:center;margin-top:3px;}
-  .roadmap-title{font-size:13px;font-weight:500;color:#fff;margin-bottom:3px;}
-  .roadmap-desc{font-size:12px;color:var(--muted);line-height:1.55;}
-  .funnel-step{display:flex;align-items:flex-start;gap:14px;padding:13px 0;border-bottom:1px solid var(--border);}
-  .funnel-step:last-child{border-bottom:none;}
-  .funnel-num{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0;margin-top:2px;}
-  .funnel-title{font-size:13px;font-weight:500;color:#fff;margin-bottom:3px;}
-  .funnel-desc{font-size:12px;color:var(--muted);line-height:1.55;}
-  .funnel-desc strong{color:var(--text);font-weight:500;}
-  .comp-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:12px;}
-  .comp-row:last-child{border-bottom:none;}
-  .comp-label{color:var(--muted);}
-  .comp-val{color:var(--text);text-align:right;}
-  .big-statement{font-family:'Syne',sans-serif;font-size:17px;font-weight:600;color:#fff;line-height:1.5;padding:18px 22px;background:var(--surface2);border-radius:12px;border-left:3px solid var(--accent);margin-bottom:18px;}
-  .big-statement span{color:var(--accent);}
-  .status-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;}
-  .status-row:last-child{border-bottom:none;}
-  .status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
-  .status-label{flex:1;color:var(--text);}
-  .status-val{color:var(--muted);font-size:12px;}
-  .persona-card{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:16px 18px;}
-  .persona-name{font-family:'Syne',sans-serif;font-size:14px;font-weight:600;color:#fff;margin-bottom:2px;}
-  .persona-age{font-size:12px;color:var(--muted);margin-bottom:10px;}
-  .persona-row{font-size:12px;color:var(--muted);padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.04);display:flex;gap:8px;}
-  .persona-row:last-child{border-bottom:none;}
-  .persona-key{color:var(--muted2);min-width:90px;flex-shrink:0;}
-  .persona-val{color:var(--text);}
-  .arch-level{display:flex;gap:10px;margin-bottom:10px;align-items:stretch;}
-  .arch-box{flex:1;border-radius:10px;padding:14px 16px;border:1px solid;}
-  .arch-box-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:5px;}
-  .arch-box-title{font-size:14px;font-weight:500;color:#fff;margin-bottom:4px;}
-  .arch-box-desc{font-size:12px;line-height:1.5;}
-  .cal-day{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;}
-  .cal-day-name{font-size:10px;font-weight:600;color:var(--muted2);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:5px;}
-  .cal-desc{font-size:12px;color:var(--muted);line-height:1.5;}
-  .cal-audience{font-size:11px;color:var(--muted2);margin-top:4px;}
-  .platform-card{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:14px 16px;}
-  .platform-card.priority{border-color:rgba(0,229,192,0.3);}
-  .platform-name{font-size:14px;font-weight:500;color:#fff;margin-bottom:3px;}
-  .platform-stat{font-size:20px;font-weight:700;color:var(--accent);}
-  .platform-stat-label{font-size:11px;color:var(--muted);margin-bottom:7px;}
-  .platform-desc{font-size:12px;color:var(--muted);line-height:1.55;}
-  .platform-desc strong{color:var(--text);font-weight:500;}
-  .mobile-nav{display:none;position:fixed;top:0;left:0;right:0;background:var(--surface);border-bottom:1px solid var(--border);padding:12px 16px;z-index:200;align-items:center;justify-content:space-between;}
-  .hamburger{background:transparent;border:none;color:var(--text);font-size:20px;cursor:pointer;padding:4px;}
-  @media(max-width:1100px){.grid-4{grid-template-columns:1fr 1fr;}.grid-3{grid-template-columns:1fr 1fr;}}
-  @media(max-width:800px){.sidebar{width:240px;}.main{margin-left:240px;padding:28px 24px;}.grid-2{grid-template-columns:1fr;}}
-  @media(max-width:640px){.mobile-nav{display:flex;}.sidebar{transform:translateX(-100%);transition:transform 0.25s;}.sidebar.open{transform:translateX(0);}.main{margin-left:0;padding:70px 16px 24px;max-width:100vw;}.grid-2,.grid-3,.grid-4{grid-template-columns:1fr;}.section-title{font-size:20px;}}
+:root {
+  /* Owlbox brand */
+  --owl-dark:    #3E0F58;
+  --owl-lavender:#7F7B9C;
+  --owl-orange:  #FF421E;
+  --owl-teal:    #2FC1A5;
+  --owl-lime:    #BBED20;
+  /* Document surface */
+  --bg:          #0D0818;
+  --surface:     #160D22;
+  --surface2:    #1E1230;
+  --surface3:    #261840;
+  --border:      rgba(127,123,156,0.18);
+  --border2:     rgba(127,123,156,0.32);
+  /* Text */
+  --text:        #EDE8F5;
+  --muted:       #9E99B8;
+  --muted2:      #5C5878;
+  /* Semantic */
+  --success:     #2FC1A5;
+  --warning:     #BBED20;
+  --danger:      #FF421E;
+  --accent:      #2FC1A5;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Ubuntu',sans-serif;
+  font-size:14px;
+  line-height:1.7;
+}
+h1,h2,h3,h4,.sidebar-logo,.section-title,.tl-title,.flow-node-title,
+.prod-name,.pillar-title,.sp-title,.card-title,.metric-value,
+.brand-name,.seg-title,.obj-q,.roadmap-title,.funnel-title {
+  font-family:'Nunito',sans-serif;
+}
+
+/* ── LAYOUT ─────────────────────────────── */
+.layout{display:flex;min-height:100vh;}
+
+/* ── SIDEBAR ─────────────────────────────── */
+.sidebar{
+  width:265px;
+  background:var(--owl-dark);
+  border-right:1px solid rgba(255,255,255,0.08);
+  position:fixed;top:0;left:0;bottom:0;
+  overflow-y:auto;z-index:100;
+  display:flex;flex-direction:column;
+}
+.sidebar-brand{
+  padding:24px 20px 18px;
+  border-bottom:1px solid rgba(255,255,255,0.1);
+}
+.sidebar-logo{
+  font-family:'Nunito',sans-serif;
+  font-size:11px;font-weight:700;
+  color:rgba(255,255,255,0.5);
+  text-transform:uppercase;letter-spacing:0.12em;
+  margin-bottom:10px;
+}
+.sidebar-client{
+  font-family:'Nunito',sans-serif;
+  font-size:22px;font-weight:800;
+  color:#fff;letter-spacing:-0.5px;
+  display:flex;align-items:center;gap:8px;
+}
+.sidebar-client-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--owl-teal);
+  display:inline-block;
+}
+.sidebar-doc-label{
+  font-size:11px;color:rgba(255,255,255,0.4);
+  margin-top:4px;font-weight:400;
+}
+.sidebar-nav{padding:10px 0;flex:1;}
+.nav-group-label{
+  font-size:10px;font-weight:700;
+  color:rgba(255,255,255,0.3);
+  text-transform:uppercase;letter-spacing:0.14em;
+  padding:10px 20px 4px;
+  font-family:'Nunito',sans-serif;
+}
+.nav-item{
+  display:flex;align-items:center;gap:10px;
+  padding:7px 20px;cursor:pointer;
+  color:rgba(255,255,255,0.5);
+  font-size:13px;font-weight:400;
+  transition:all 0.15s;
+  border-left:2px solid transparent;
+  text-decoration:none;user-select:none;
+}
+.nav-item:hover{color:rgba(255,255,255,0.85);background:rgba(255,255,255,0.05);}
+.nav-item.active{
+  color:#fff;
+  border-left-color:var(--owl-teal);
+  background:rgba(47,193,165,0.12);
+  font-weight:600;
+}
+.nav-dot{
+  width:5px;height:5px;border-radius:50%;
+  background:currentColor;opacity:0.5;flex-shrink:0;
+}
+.nav-item.active .nav-dot{opacity:1;}
+.sidebar-footer{
+  padding:14px 20px;
+  border-top:1px solid rgba(255,255,255,0.08);
+  font-size:11px;
+  color:rgba(255,255,255,0.3);
+}
+.sidebar-footer span{color:var(--owl-teal);}
+
+/* ── MAIN ─────────────────────────────────── */
+.main{margin-left:265px;flex:1;padding:40px 52px;max-width:calc(100vw - 265px);}
+.section{display:none;animation:fadeIn 0.2s ease;}
+.section.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── SECTION HEADER ─────────────────────── */
+.section-header{margin-bottom:30px;padding-bottom:22px;border-bottom:1px solid var(--border);}
+.section-tag{
+  font-size:11px;font-weight:700;
+  color:var(--owl-teal);
+  text-transform:uppercase;letter-spacing:0.12em;
+  margin-bottom:8px;
+  font-family:'Nunito',sans-serif;
+}
+.section-title{font-size:26px;font-weight:800;color:#fff;line-height:1.2;margin-bottom:10px;}
+.section-subtitle{font-size:14px;color:var(--muted);line-height:1.6;max-width:680px;}
+
+/* ── GRID ─────────────────────────────────── */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:22px;}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:22px;}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:22px;}
+
+/* ── CARDS ─────────────────────────────────── */
+.card{
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:12px;padding:16px 18px;
+}
+.card-title{font-size:13px;font-weight:700;color:#fff;margin-bottom:6px;}
+.card-body{font-size:13px;color:var(--muted);line-height:1.6;}
+.card-body strong{color:var(--text);font-weight:600;}
+
+/* ── BADGES ─────────────────────────────────── */
+.badge{
+  display:inline-block;font-size:10px;font-weight:700;
+  padding:2px 9px;border-radius:20px;margin-bottom:7px;
+  text-transform:uppercase;letter-spacing:0.06em;
+  font-family:'Nunito',sans-serif;
+}
+.ba{background:rgba(47,193,165,0.15);color:var(--owl-teal);border:1px solid rgba(47,193,165,0.3);}
+.bb{background:rgba(62,15,88,0.5);color:#C4A8E0;border:1px solid rgba(127,123,156,0.3);}
+.bw{background:rgba(187,237,32,0.12);color:var(--owl-lime);border:1px solid rgba(187,237,32,0.25);}
+.bd{background:rgba(255,66,30,0.12);color:#FF9070;border:1px solid rgba(255,66,30,0.25);}
+.bs{background:rgba(47,193,165,0.1);color:var(--owl-teal);border:1px solid rgba(47,193,165,0.2);}
+.bm{background:rgba(127,123,156,0.15);color:var(--muted);border:1px solid var(--border2);}
+.bp{background:rgba(62,15,88,0.4);color:#D4A8FF;border:1px solid rgba(127,123,156,0.25);}
+.bo{background:rgba(255,66,30,0.15);color:var(--owl-orange);border:1px solid rgba(255,66,30,0.3);}
+
+/* ── HIGHLIGHT BOXES ─────────────────────── */
+.highlight-box{
+  background:rgba(47,193,165,0.07);
+  border:1px solid rgba(47,193,165,0.2);
+  border-left:3px solid var(--owl-teal);
+  border-radius:0 10px 10px 0;
+  padding:14px 18px;margin-bottom:18px;
+  font-size:13px;line-height:1.65;color:var(--text);
+}
+.highlight-box strong{color:var(--owl-teal);font-weight:600;}
+.warn-box{
+  background:rgba(187,237,32,0.05);
+  border:1px solid rgba(187,237,32,0.18);
+  border-left:3px solid var(--owl-lime);
+  border-radius:0 10px 10px 0;
+  padding:14px 18px;margin-bottom:18px;
+  font-size:13px;line-height:1.65;color:var(--text);
+}
+.warn-box strong{color:var(--owl-lime);font-weight:600;}
+.info-box{
+  background:rgba(127,123,156,0.08);
+  border:1px solid rgba(127,123,156,0.2);
+  border-left:3px solid var(--owl-lavender);
+  border-radius:0 10px 10px 0;
+  padding:14px 18px;margin-bottom:18px;
+  font-size:13px;line-height:1.65;color:var(--text);
+}
+.info-box strong{color:#C4A8E0;font-weight:600;}
+.danger-box{
+  background:rgba(255,66,30,0.06);
+  border:1px solid rgba(255,66,30,0.2);
+  border-left:3px solid var(--owl-orange);
+  border-radius:0 10px 10px 0;
+  padding:14px 18px;margin-bottom:18px;
+  font-size:13px;line-height:1.65;color:var(--text);
+}
+.danger-box strong{color:#FF9070;font-weight:600;}
+
+/* ── TYPOGRAPHY ─────────────────────────── */
+h3{font-size:15px;font-weight:800;color:#fff;margin:22px 0 10px;}
+h3:first-child{margin-top:0;}
+.divider{height:1px;background:var(--border);margin:26px 0;}
+
+/* ── BIG STATEMENT ─────────────────────── */
+.big-statement{
+  font-size:18px;font-weight:800;color:#fff;line-height:1.4;
+  padding:20px 24px;
+  background:linear-gradient(135deg,var(--surface2) 0%,rgba(62,15,88,0.6) 100%);
+  border-radius:12px;
+  border:1px solid rgba(127,123,156,0.2);
+  border-left:3px solid var(--owl-teal);
+  margin-bottom:20px;
+}
+.big-statement span{color:var(--owl-teal);}
+
+/* ── STATUS ─────────────────────────────── */
+.status-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);font-size:13px;}
+.status-row:last-child{border-bottom:none;}
+.status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.status-label{flex:1;color:var(--text);}
+.status-val{color:var(--muted);font-size:12px;}
+
+/* ── FLOW DIAGRAM ─────────────────────── */
+.flow{display:flex;flex-direction:column;gap:0;}
+.flow-node{
+  background:var(--surface2);
+  border:1px solid var(--border2);
+  border-radius:10px;padding:12px 16px;
+}
+.flow-node.accent{border-color:rgba(47,193,165,0.4);background:rgba(47,193,165,0.06);}
+.flow-node.warn{border-color:rgba(187,237,32,0.3);background:rgba(187,237,32,0.04);}
+.flow-node.info{border-color:rgba(127,123,156,0.35);background:rgba(62,15,88,0.3);}
+.flow-node.danger{border-color:rgba(255,66,30,0.3);background:rgba(255,66,30,0.05);}
+.flow-node-title{font-size:13px;font-weight:700;color:#fff;margin-bottom:3px;}
+.flow-node-desc{font-size:12px;color:var(--muted);line-height:1.55;}
+.flow-node-desc strong{color:var(--text);font-weight:600;}
+.flow-connector{
+  display:flex;align-items:center;justify-content:center;
+  height:28px;position:relative;
+}
+.flow-line{width:1px;height:100%;background:var(--border2);position:absolute;}
+.flow-arrow{
+  width:7px;height:7px;
+  border-right:1.5px solid var(--owl-teal);
+  border-bottom:1.5px solid var(--owl-teal);
+  transform:rotate(45deg);
+  position:absolute;bottom:4px;
+}
+.flow-branch{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0;}
+
+/* ── TIMELINE ─────────────────────────── */
+.timeline{position:relative;padding-left:30px;}
+.timeline::before{
+  content:'';position:absolute;left:9px;top:8px;bottom:8px;
+  width:1px;background:var(--border2);
+}
+.tl-item{position:relative;margin-bottom:28px;}
+.tl-dot{
+  position:absolute;left:-25px;top:5px;
+  width:10px;height:10px;border-radius:50%;
+  border:2px solid var(--owl-teal);
+  background:var(--bg);flex-shrink:0;
+}
+.tl-dot.dim{border-color:var(--muted2);background:var(--bg);}
+.tl-phase{
+  font-size:11px;font-weight:700;
+  color:var(--owl-teal);text-transform:uppercase;
+  letter-spacing:0.1em;margin-bottom:4px;
+  font-family:'Nunito',sans-serif;
+}
+.tl-phase.dim{color:var(--muted2);}
+.tl-title{font-size:14px;font-weight:700;color:#fff;margin-bottom:6px;}
+.tl-items{font-size:12px;color:var(--muted);line-height:1.75;}
+.tl-items li{list-style:none;padding:1px 0;display:flex;gap:8px;align-items:baseline;}
+.tl-items li::before{
+  content:'→';color:var(--owl-teal);flex-shrink:0;
+  font-size:11px;
+}
+.tl-items li.dim::before{color:var(--muted2);}
+
+/* ── SEGMENTS ─────────────────────────── */
+.seg-card{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:16px 18px;}
+.seg-title{font-size:13px;font-weight:700;color:#fff;margin-bottom:5px;}
+.seg-body{font-size:12px;color:var(--muted);line-height:1.6;}
+.seg-body strong{color:var(--text);font-weight:600;}
+.seg-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;}
+.seg-tag{
+  font-size:10px;padding:2px 8px;border-radius:10px;
+  background:rgba(127,123,156,0.12);
+  border:1px solid rgba(127,123,156,0.2);
+  color:var(--muted);
+}
+
+/* ── OBJECTIONS ─────────────────────────── */
+.obj-item{border:1px solid var(--border);border-radius:10px;margin-bottom:8px;overflow:hidden;}
+.obj-header{
+  padding:12px 16px;cursor:pointer;
+  display:flex;justify-content:space-between;align-items:center;
+  background:var(--surface2);
+  transition:background 0.15s;
+}
+.obj-header:hover{background:var(--surface3);}
+.obj-q{font-size:13px;font-weight:700;color:#fff;}
+.obj-toggle{
+  width:20px;height:20px;border-radius:50%;
+  border:1px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;color:var(--muted);
+  transition:all 0.2s;flex-shrink:0;
+}
+.obj-toggle.open{transform:rotate(45deg);border-color:var(--owl-teal);color:var(--owl-teal);}
+.obj-body{
+  display:none;padding:12px 16px;
+  border-top:1px solid var(--border);
+  font-size:13px;color:var(--muted);line-height:1.65;
+}
+.obj-body.open{display:block;}
+.obj-body strong{color:var(--text);font-weight:600;}
+
+/* ── PRODUCT CARDS ─────────────────────── */
+.prod-card{
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:12px;overflow:hidden;margin-bottom:12px;
+}
+.prod-header{
+  padding:14px 18px;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;gap:8px;
+  background:rgba(62,15,88,0.3);
+}
+.prod-name{font-size:14px;font-weight:700;color:#fff;}
+.prod-price{
+  font-family:'Nunito',sans-serif;
+  font-size:16px;font-weight:800;
+  color:var(--owl-teal);
+}
+.prod-body{
+  padding:14px 18px;
+  display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;
+}
+.prod-field-label{
+  font-size:10px;font-weight:700;
+  color:var(--muted2);text-transform:uppercase;
+  letter-spacing:0.06em;margin-bottom:3px;
+  font-family:'Nunito',sans-serif;
+}
+.prod-field-val{font-size:12px;color:var(--text);}
+
+/* ── PILLARS ─────────────────────────────── */
+.pillar{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid var(--border);align-items:flex-start;}
+.pillar:last-child{border-bottom:none;}
+.pillar-num{
+  width:32px;height:32px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Nunito',sans-serif;
+  font-size:14px;font-weight:800;flex-shrink:0;
+}
+.pillar-title{font-size:14px;font-weight:700;color:#fff;margin-bottom:4px;}
+.pillar-desc{font-size:12px;color:var(--muted);line-height:1.6;}
+.pillar-desc strong{color:var(--text);font-weight:600;}
+
+/* ── SOCIAL PILLARS ─────────────────────── */
+.social-pillar{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:12px;padding:16px 18px;margin-bottom:10px;
+  display:flex;gap:14px;align-items:flex-start;
+}
+.sp-num{
+  width:28px;height:28px;border-radius:6px;
+  background:rgba(47,193,165,0.15);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Nunito',sans-serif;
+  font-size:12px;font-weight:800;color:var(--owl-teal);
+  flex-shrink:0;margin-top:2px;
+}
+.sp-title{font-size:13px;font-weight:700;color:#fff;margin-bottom:4px;}
+.sp-desc{font-size:12px;color:var(--muted);line-height:1.6;}
+.sp-example{
+  font-size:11px;padding:6px 10px;border-radius:6px;margin-top:8px;
+  background:rgba(62,15,88,0.4);border:1px solid rgba(127,123,156,0.2);
+  color:var(--muted);font-style:italic;
+}
+
+/* ── DATA TABLE ─────────────────────────── */
+.data-table{width:100%;border-collapse:collapse;margin-bottom:22px;font-size:13px;}
+.data-table th{
+  text-align:left;padding:9px 12px;
+  font-size:10px;font-weight:700;color:var(--muted);
+  text-transform:uppercase;letter-spacing:0.08em;
+  border-bottom:1px solid var(--border2);
+  background:rgba(62,15,88,0.4);
+  font-family:'Nunito',sans-serif;
+}
+.data-table td{padding:10px 12px;border-bottom:1px solid var(--border);color:var(--text);vertical-align:middle;}
+.data-table tr:last-child td{border-bottom:none;}
+.data-table tr:hover td{background:rgba(255,255,255,0.02);}
+.price-val{font-family:'Nunito',sans-serif;font-weight:800;color:var(--owl-teal);white-space:nowrap;}
+
+/* ── COMP ROWS ─────────────────────────── */
+.comp-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(127,123,156,0.1);font-size:12px;}
+.comp-row:last-child{border-bottom:none;}
+.comp-label{color:var(--muted);}
+.comp-val{color:var(--text);text-align:right;}
+
+/* ── OWLBOX ACCENT SHAPE (decorative) ── */
+.owl-shape{
+  width:40px;height:40px;flex-shrink:0;
+  background:var(--owl-orange);
+  border-radius:4px 4px 4px 16px;
+  display:flex;align-items:center;justify-content:center;
+}
+.owl-shape-teal{background:var(--owl-teal);border-radius:16px 4px 4px 4px;}
+
+/* ── MOBILE ─────────────────────────────── */
+.mobile-nav{
+  display:none;position:fixed;top:0;left:0;right:0;
+  background:var(--owl-dark);
+  border-bottom:1px solid rgba(255,255,255,0.08);
+  padding:12px 16px;z-index:200;
+  align-items:center;justify-content:space-between;
+}
+.hamburger{background:transparent;border:none;color:#fff;font-size:20px;cursor:pointer;padding:4px;}
+@media(max-width:900px){.grid-3{grid-template-columns:1fr 1fr;}.grid-4{grid-template-columns:1fr 1fr;}.prod-body{grid-template-columns:1fr 1fr;}}
+@media(max-width:640px){
+  .mobile-nav{display:flex;}
+  .sidebar{transform:translateX(-100%);transition:transform 0.25s;}
+  .sidebar.open{transform:translateX(0);}
+  .main{margin-left:0;padding:70px 16px 24px;max-width:100vw;}
+  .grid-2,.grid-3,.grid-4{grid-template-columns:1fr;}
+  .section-title{font-size:20px;}
+  .prod-body{grid-template-columns:1fr;}
+  .flow-branch{grid-template-columns:1fr;}
+}
 </style>
 </head>
 <body>
 
 <div class="mobile-nav">
-  <div style="font-family:Syne;font-size:18px;font-weight:800;color:#fff">OMNI<span style="color:#00E5C0">X</span></div>
+  <div style="font-family:Nunito;font-size:16px;font-weight:800;color:#fff;letter-spacing:-0.5px;">OMNIX <span style="color:var(--owl-teal);font-size:11px;font-weight:600;letter-spacing:0.1em;">· OWLBOX</span></div>
   <button class="hamburger" onclick="toggleSidebar()">☰</button>
 </div>
 
 <div class="layout">
 <nav class="sidebar" id="sidebar">
   <div class="sidebar-brand">
-    <div class="sidebar-logo">OMNI<span>X</span></div>
-    <div class="sidebar-doc-label">Plan Estratégico de Negocio</div>
-    <div class="sidebar-version">v2 — Documento vivo</div>
+    <div class="sidebar-logo">Owlbox · Documento de trabajo</div>
+    <div class="sidebar-client">
+      <div class="sidebar-client-dot"></div>
+      OMNIX
+    </div>
+    <div class="sidebar-doc-label">Plan estratégico de negocio</div>
   </div>
   <div class="sidebar-nav">
-
-    <div class="nav-group">
-      <div class="nav-group-label">Marca Omnix</div>
-      <a class="nav-item active" onclick="showSection('resumen')"><div class="nav-dot"></div>Resumen ejecutivo</a>
-      <a class="nav-item" onclick="showSection('arquitectura')"><div class="nav-dot"></div>Arquitectura de marca</a>
-      <a class="nav-item" onclick="showSection('smarthome')"><div class="nav-dot"></div>Posicionamiento smart home</a>
-    </div>
-
-    <div class="nav-group">
-      <div class="nav-group-label">Producto — Omnix Security</div>
-      <a class="nav-item" onclick="showSection('modelo')"><div class="nav-dot"></div>Modelo de negocio</a>
-      <a class="nav-item" onclick="showSection('segmentos')"><div class="nav-dot"></div>Segmentos y perfiles</a>
-      <a class="nav-item" onclick="showSection('competidores')"><div class="nav-dot"></div>Análisis competitivo</a>
-      <a class="nav-item" onclick="showSection('productos')"><div class="nav-dot"></div>Productos y precios</a>
-      <a class="nav-item" onclick="showSection('ventas')"><div class="nav-dot"></div>Estrategia de ventas</a>
-      <a class="nav-item" onclick="showSection('funnel')"><div class="nav-dot"></div>Embudo de conversión</a>
-    </div>
-
-    <div class="nav-group">
-      <div class="nav-group-label">Marketing digital</div>
-      <a class="nav-item" onclick="showSection('ecosistema')"><div class="nav-dot"></div>Ecosistema digital</a>
-      <a class="nav-item" onclick="showSection('rrss')"><div class="nav-dot"></div>Redes sociales</a>
-      <a class="nav-item" onclick="showSection('web')"><div class="nav-dot"></div>Sitio web / Landings</a>
-    </div>
-
-    <div class="nav-group">
-      <div class="nav-group-label">Ejecución</div>
-      <a class="nav-item" onclick="showSection('fases')"><div class="nav-dot"></div>Fases de lanzamiento</a>
-      <a class="nav-item" onclick="showSection('equipo')"><div class="nav-dot"></div>Equipo y recursos</a>
-      <a class="nav-item" onclick="showSection('stack')"><div class="nav-dot"></div>Stack tecnológico</a>
-    </div>
-
+    <div class="nav-group-label">Visión</div>
+    <a class="nav-item active" onclick="nav('resumen',this)"><div class="nav-dot"></div>Resumen ejecutivo</a>
+    <a class="nav-item" onclick="nav('arquitectura',this)"><div class="nav-dot"></div>Arquitectura de marca</a>
+    <a class="nav-item" onclick="nav('modelo',this)"><div class="nav-dot"></div>Modelo de negocio</a>
+    <div class="nav-group-label">Mercado</div>
+    <a class="nav-item" onclick="nav('smarthome',this)"><div class="nav-dot"></div>Posicionamiento Omnix</a>
+    <a class="nav-item" onclick="nav('segmentos',this)"><div class="nav-dot"></div>Segmentos y perfiles</a>
+    <a class="nav-item" onclick="nav('competidores',this)"><div class="nav-dot"></div>Análisis competitivo</a>
+    <div class="nav-group-label">Producto</div>
+    <a class="nav-item" onclick="nav('productos',this)"><div class="nav-dot"></div>Productos y precios</a>
+    <a class="nav-item" onclick="nav('roadmap',this)"><div class="nav-dot"></div>Roadmap</a>
+    <div class="nav-group-label">Comercial</div>
+    <a class="nav-item" onclick="nav('ventas',this)"><div class="nav-dot"></div>Estrategia de ventas</a>
+    <a class="nav-item" onclick="nav('funnel',this)"><div class="nav-dot"></div>Embudo de conversión</a>
+    <div class="nav-group-label">Marketing</div>
+    <a class="nav-item" onclick="nav('ecosistema',this)"><div class="nav-dot"></div>Ecosistema digital</a>
+    <a class="nav-item" onclick="nav('rrss',this)"><div class="nav-dot"></div>Redes sociales</a>
+    <a class="nav-item" onclick="nav('web',this)"><div class="nav-dot"></div>Sitio web / Landings</a>
+    <div class="nav-group-label">Equipo</div>
+    <a class="nav-item" onclick="nav('equipo',this)"><div class="nav-dot"></div>Equipo y recursos</a>
+    <a class="nav-item" onclick="nav('contenidos',this)"><div class="nav-dot"></div>Estrategia de contenidos</a>
   </div>
   <div class="sidebar-footer">
-    omnix.com.ar · <span style="color:var(--accent)">Documento confidencial</span>
+    <span>owlbox.io</span> · Growth Marketing<br>
+    Córdoba, Argentina
   </div>
 </nav>
 
 <main class="main">
 
-<!-- ===== RESUMEN EJECUTIVO ===== -->
+<!-- ══════════════════════ RESUMEN ══════════════════════ -->
 <section class="section active" id="resumen">
   <div class="section-header">
-    <div class="section-tag">Omnix — Visión general</div>
+    <div class="section-tag">01 · Visión general</div>
     <h1 class="section-title">Resumen ejecutivo</h1>
-    <p class="section-subtitle">Omnix es una empresa comercializadora de tecnología inteligente para el hogar y el comercio. Su producto inicial es el sistema de alarmas y monitoreo ADT, con visión de expansión hacia un ecosistema smart home completo.</p>
+    <p class="section-subtitle">Omnix es una comercializadora de tecnología inteligente para el hogar y el comercio. Su producto inicial es el servicio de alarmas y monitoreo ADT. Su visión es expandirse hacia un ecosistema completo de soluciones inteligentes.</p>
   </div>
 
   <div class="big-statement">
     Omnix es una <span>comercializadora de tecnología inteligente</span>.<br>
-    Hoy vende sistemas de seguridad. Mañana vende el hogar inteligente completo.
+    Hoy vende seguridad. Mañana vende el hogar inteligente completo.
   </div>
 
   <h3>Estado actual del proyecto</h3>
   <div class="card">
-    <div class="status-row"><div class="status-dot" style="background:#22C55E"></div><div class="status-label">Naming definido</div><div class="status-val">Omnix ✓</div></div>
-    <div class="status-row"><div class="status-dot" style="background:#22C55E"></div><div class="status-label">Dominio comprado</div><div class="status-val">omnix.com.ar ✓</div></div>
-    <div class="status-row"><div class="status-dot" style="background:#22C55E"></div><div class="status-label">Brief de marca completado</div><div class="status-val">Listo para tercerizar ✓</div></div>
-    <div class="status-row"><div class="status-dot" style="background:#F59E0B"></div><div class="status-label">Desarrollo de identidad visual</div><div class="status-val">En proceso — tercerizado</div></div>
-    <div class="status-row"><div class="status-dot" style="background:#EF4444"></div><div class="status-label">Área de Redes Sociales / Social Media</div><div class="status-val">Por contratar o desarrollar</div></div>
-    <div class="status-row"><div class="status-dot" style="background:#EF4444"></div><div class="status-label">Desarrollo de flujos conversacionales (chatbot)</div><div class="status-val">Por desarrollar</div></div>
-    <div class="status-row"><div class="status-dot" style="background:#EF4444"></div><div class="status-label">Landing page hogar</div><div class="status-val">Por iniciar</div></div>
-    <div class="status-row"><div class="status-dot" style="background:#EF4444"></div><div class="status-label">Landing page comercio</div><div class="status-val">Por iniciar</div></div>
-    <div class="status-row"><div class="status-dot" style="background:#EF4444"></div><div class="status-label">CRM y pipeline de ventas</div><div class="status-val">Por implementar</div></div>
-    <div class="status-row"><div class="status-dot" style="background:#EF4444"></div><div class="status-label">Estrategia y plan de contenidos RRSS</div><div class="status-val">Por definir</div></div>
+    <div class="status-row"><div class="status-dot" style="background:#2FC1A5"></div><div class="status-label">Naming definido</div><div class="status-val">Omnix ✓</div></div>
+    <div class="status-row"><div class="status-dot" style="background:#2FC1A5"></div><div class="status-label">Dominio comprado</div><div class="status-val">omnix.com.ar ✓</div></div>
+    <div class="status-row"><div class="status-dot" style="background:#2FC1A5"></div><div class="status-label">Brief de marca completado</div><div class="status-val">Listo para tercerizar ✓</div></div>
+    <div class="status-row"><div class="status-dot" style="background:#BBED20"></div><div class="status-label">Desarrollo de identidad visual</div><div class="status-val">En proceso — tercerizado</div></div>
+    <div class="status-row"><div class="status-dot" style="background:#FF421E"></div><div class="status-label">Nombre de línea de seguridad (Omnix Safe / Guard / Secure)</div><div class="status-val">Por iniciar</div></div>
+    <div class="status-row"><div class="status-dot" style="background:#FF421E"></div><div class="status-label">Área de Redes Sociales / Social Media</div><div class="status-val">Por iniciar</div></div>
+    <div class="status-row"><div class="status-dot" style="background:#FF421E"></div><div class="status-label">Flujos conversacionales (chatbot + WhatsApp)</div><div class="status-val">Por iniciar</div></div>
+    <div class="status-row"><div class="status-dot" style="background:#FF421E"></div><div class="status-label">Landing page hogar</div><div class="status-val">Por iniciar</div></div>
+    <div class="status-row"><div class="status-dot" style="background:#FF421E"></div><div class="status-label">Landing page comercio</div><div class="status-val">Por iniciar</div></div>
+    <div class="status-row"><div class="status-dot" style="background:#FF421E"></div><div class="status-label">CRM y pipeline de ventas</div><div class="status-val">Por iniciar</div></div>
+    <div class="status-row"><div class="status-dot" style="background:#BBED20"></div><div class="status-label">Estrategia y plan de contenidos RRSS</div><div class="status-val">En desarrollo</div></div>
   </div>
 
   <div class="divider"></div>
-
-  <h3>Dos niveles estratégicos a trabajar en paralelo</h3>
+  <h3>Dos niveles estratégicos en paralelo</h3>
   <div class="grid-2">
-    <div class="card" style="border-color:rgba(0,229,192,0.3);">
+    <div class="card" style="border-color:rgba(47,193,165,0.3);">
       <div class="badge ba">Nivel 1</div>
-      <div class="card-title">Omnix como marca global</div>
-      <div class="card-body">Identidad, posicionamiento y arquitectura de marca para la empresa en su conjunto. Incluye la visión de largo plazo como comercializadora de tecnología inteligente para el hogar y el comercio, independientemente del producto actual.</div>
+      <div class="card-title">Omnix — marca global</div>
+      <div class="card-body">Identidad, posicionamiento y arquitectura de marca como empresa comercializadora de tecnología inteligente. Visión independiente del producto actual.</div>
     </div>
-    <div class="card">
+    <div class="card" style="border-color:rgba(127,123,156,0.3);">
       <div class="badge bb">Nivel 2</div>
-      <div class="card-title">Omnix Security — producto inicial</div>
-      <div class="card-body">Estrategia específica para la línea de alarmas y monitoreo ADT: naming de la línea, segmentos, pricing, canales, funnel de ventas, contenido. Es el negocio de hoy y el motor de caja para financiar la expansión.</div>
+      <div class="card-title">Omnix Safe — producto inicial</div>
+      <div class="card-body">Estrategia específica de la línea de alarmas y monitoreo ADT. Motor de caja para financiar la expansión hacia el ecosistema inteligente.</div>
     </div>
   </div>
 </section>
 
-<!-- ===== ARQUITECTURA DE MARCA ===== -->
+<!-- ══════════════════════ ARQUITECTURA ══════════════════════ -->
 <section class="section" id="arquitectura">
   <div class="section-header">
-    <div class="section-tag">Omnix — Arquitectura de marca</div>
+    <div class="section-tag">02 · Arquitectura de marca</div>
     <h1 class="section-title">Arquitectura de marca</h1>
-    <p class="section-subtitle">Modelo B definido: Omnix como marca paraguas con líneas de producto nombradas. Permite diferenciar cada categoría sin perder el equity de la marca madre.</p>
+    <p class="section-subtitle">Modelo B definido: Omnix como marca paraguas con líneas de producto nombradas. Cada línea tiene identidad propia bajo el paraguas.</p>
   </div>
 
-  <div class="highlight-box">
-    <strong>Modelo elegido: Marca paraguas con líneas nombradas.</strong> Omnix es la empresa y la marca madre. Cada línea de producto tiene un nombre propio que siempre aparece bajo el paraguas Omnix. La inversión de branding se distribuye entre la marca global y cada línea, permitiendo escalar sin fragmentar la identidad.
-  </div>
+  <div class="highlight-box"><strong>Modelo elegido: Marca paraguas.</strong> Omnix es la empresa. Cada línea tiene nombre propio. Esto permite escalar a múltiples categorías sin fragmentar la marca madre ni construir marcas desde cero para cada producto.</div>
 
   <h3>Estructura de marca</h3>
-
-  <div class="card" style="margin-bottom:16px;">
-    <div class="arch-box-label" style="font-size:11px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;">Marca madre</div>
-    <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:#fff;letter-spacing:-0.5px;margin-bottom:6px;">OMNIX</div>
-    <div style="font-size:13px;color:var(--muted);line-height:1.6;">Comercializadora de tecnología inteligente para el hogar y el comercio. Selecciona, integra, instala y soporta las mejores soluciones del mercado.</div>
+  <div style="display:flex;flex-direction:column;align-items:center;gap:0;margin-bottom:28px;">
+    <div style="background:linear-gradient(135deg,var(--owl-dark) 0%,#5A1A80 100%);border:1px solid rgba(127,123,156,0.35);border-radius:14px;padding:18px 40px;text-align:center;">
+      <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.14em;margin-bottom:6px;font-family:'Nunito',sans-serif;">Marca madre</div>
+      <div style="font-family:'Nunito',sans-serif;font-size:28px;font-weight:800;color:#fff;letter-spacing:-1px;">OMNIX</div>
+      <div style="font-size:12px;color:rgba(255,255,255,0.45);margin-top:4px;">Comercializadora de tecnología inteligente</div>
+    </div>
+    <svg width="300" height="36" viewBox="0 0 300 36">
+      <line x1="60" y1="0" x2="60" y2="36" stroke="rgba(127,123,156,0.3)" stroke-width="1"/>
+      <line x1="150" y1="0" x2="150" y2="36" stroke="rgba(47,193,165,0.5)" stroke-width="1"/>
+      <line x1="240" y1="0" x2="240" y2="36" stroke="rgba(127,123,156,0.3)" stroke-width="1"/>
+      <line x1="60" y1="0" x2="240" y2="0" stroke="rgba(127,123,156,0.2)" stroke-width="1"/>
+      <polygon points="56,28 64,28 60,36" fill="rgba(127,123,156,0.3)"/>
+      <polygon points="146,28 154,28 150,36" fill="rgba(47,193,165,0.5)"/>
+      <polygon points="236,28 244,28 240,36" fill="rgba(127,123,156,0.3)"/>
+    </svg>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;width:100%;">
+      <div style="background:rgba(47,193,165,0.06);border:1px solid rgba(47,193,165,0.3);border-radius:10px;padding:14px 16px;text-align:center;">
+        <div style="font-size:10px;font-weight:700;color:var(--owl-teal);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px;font-family:'Nunito',sans-serif;">Línea activa · Fase 1</div>
+        <div style="font-family:'Nunito',sans-serif;font-size:18px;font-weight:800;color:#fff;">Omnix Safe</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px;">Seguridad monitoreada ADT</div>
+      </div>
+      <div style="background:rgba(62,15,88,0.3);border:1px dashed rgba(187,237,32,0.25);border-radius:10px;padding:14px 16px;text-align:center;">
+        <div style="font-size:10px;font-weight:700;color:var(--owl-lime);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px;font-family:'Nunito',sans-serif;">Línea futura · Fase 2</div>
+        <div style="font-family:'Nunito',sans-serif;font-size:18px;font-weight:800;color:#fff;">Omnix Home</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px;">Domótica · automatización</div>
+      </div>
+      <div style="background:rgba(62,15,88,0.2);border:1px dashed rgba(127,123,156,0.25);border-radius:10px;padding:14px 16px;text-align:center;">
+        <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px;font-family:'Nunito',sans-serif;">Exploración · Fase 3+</div>
+        <div style="font-family:'Nunito',sans-serif;font-size:18px;font-weight:800;color:rgba(255,255,255,0.6);">Omnix Connect</div>
+        <div style="font-size:11px;color:var(--muted2);margin-top:4px;">Fibra · conectividad inteligente</div>
+      </div>
+    </div>
   </div>
 
-  <div class="grid-3" style="margin-bottom:24px;">
-    <div class="card" style="border-color:rgba(0,229,192,0.3);">
-      <div class="badge badge-accent">Línea activa — Fase 1</div>
-      <div class="card-title" style="font-size:16px;">Omnix <span style="color:var(--accent);">[nombre a definir]</span></div>
-      <div class="card-body" style="margin-top:6px;">Sistemas de alarmas y monitoreo 24/7. Agente oficial ADT vía NTI. Motor de ingresos recurrentes y base de clientes para upsell futuro.</div>
-    </div>
-    <div class="card" style="border-color:rgba(245,158,11,0.2);">
-      <div class="badge badge-warning">Línea futura — Fase 2</div>
-      <div class="card-title" style="font-size:16px;">Omnix Home</div>
-      <div class="card-body" style="margin-top:6px;">Domótica accesible: cámaras con IA, cerraduras inteligentes, iluminación automatizada. Instalación profesional sin obra.</div>
-    </div>
-    <div class="card" style="border-color:rgba(91,110,245,0.2);">
-      <div class="badge badge-purple">Línea futura — Fase 2+</div>
-      <div class="card-title" style="font-size:16px;">Omnix Business</div>
-      <div class="card-body" style="margin-top:6px;">Soluciones integrales para comercios y empresas. Control de acceso, videovigilancia, gestión multi-sucursal.</div>
-    </div>
-  </div>
+  <div class="info-box"><strong>Sobre las líneas futuras:</strong> Omnix Home y Omnix Connect están fuera del ámbito de seguridad. Omnix Home abarca domótica, cámaras standalone, cerraduras inteligentes e iluminación automatizada. Omnix Connect explora la reventa o agencia de servicios de internet y equipos WiFi mesh — modelo de negocio a definir.</div>
 
   <div class="divider"></div>
+  <h3>Nombre de la línea de seguridad — decisión pendiente</h3>
+  <div class="warn-box"><strong>Debemos elegir</strong> entre las tres opciones. Cada nombre comunica un tono distinto y debe ir alineado con la identidad visual a definir.</div>
 
-  <h3>Nombre de la línea de seguridad — decisión pendiente del cliente</h3>
-
-  <div class="info-box">
-    El cliente debe elegir uno de los tres nombres para la línea de seguridad ADT. El nombre impacta directamente en el diseño del logo, los materiales de venta y la comunicación de la línea. La decisión final conviene tomarla junto con el estudio de identidad visual.
-  </div>
-
-  <div class="grid-3">
-    <div class="card">
-      <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:700;color:#fff;margin-bottom:4px;">Omnix Guard</div>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:12px;text-transform:uppercase;letter-spacing:0.06em;">Vigilancia · Custodia · Respuesta</div>
-      <div style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:12px;">Directo y sin ambigüedad. Conecta bien con el servicio de monitoreo y la respuesta ante emergencias. Tono más profesional y técnico.</div>
-      <div style="font-size:12px;color:var(--muted);padding:8px 10px;background:var(--surface);border-radius:8px;border:1px solid var(--border2);"><strong style="color:var(--text);font-weight:500;">Punto a considerar:</strong> puede sonar más a empresa de seguridad física que a marca de tecnología. Evaluar si va en línea con el tono que se defina en el brief visual.</div>
-    </div>
-    <div class="card" style="border:2px solid var(--color-border-info);">
-      <div style="font-size:11px;font-weight:600;color:var(--color-text-info);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.06em;">Opción intermedia</div>
-      <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:700;color:#fff;margin-bottom:4px;">Omnix Secure</div>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:12px;text-transform:uppercase;letter-spacing:0.06em;">Seguridad · Confianza · Claridad</div>
-      <div style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:12px;">Descriptivo, fácil de entender y de comunicar. Cualquier cliente entiende de qué se trata sin explicación. Tono equilibrado entre tecnológico y accesible.</div>
-      <div style="font-size:12px;color:var(--muted);padding:8px 10px;background:var(--surface);border-radius:8px;border:1px solid var(--border2);"><strong style="color:var(--text);font-weight:500;">Punto a considerar:</strong> al ser muy descriptivo, puede sentirse como categoría más que como nombre de marca. Menos diferenciador, pero de adopción más rápida.</div>
+  <div class="grid-3" style="margin-bottom:20px;">
+    <div class="card" style="border:2px solid rgba(47,193,165,0.5);position:relative;padding-top:22px;">
+      <div style="position:absolute;top:-1px;left:16px;background:var(--owl-teal);color:#0D0818;font-size:10px;font-weight:800;padding:2px 10px;border-radius:0 0 8px 8px;font-family:'Nunito',sans-serif;text-transform:uppercase;letter-spacing:0.06em;">Opción preferida</div>
+      <div style="font-family:'Nunito',sans-serif;font-size:22px;font-weight:800;color:#fff;margin-bottom:3px;">Omnix Safe</div>
+      <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;font-family:'Nunito',sans-serif;">Tranquilidad · bienestar · emoción</div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:12px;">El más emocional. Habla del beneficio final — sentirse seguro. Tono cercano y familiar. Conecta directamente con el miedo como motivador real de compra.</div>
+      <div style="font-size:12px;color:var(--muted);padding:8px 10px;background:var(--surface);border-radius:8px;border:1px solid var(--border2);font-style:italic;">"Omnix Safe. Dormí tranquilo, nosotros cuidamos."</div>
     </div>
     <div class="card">
-      <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:700;color:#fff;margin-bottom:4px;">Omnix Safe</div>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:12px;text-transform:uppercase;letter-spacing:0.06em;">Tranquilidad · Bienestar · Emoción</div>
-      <div style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:12px;">El más emocional de los tres. Habla del beneficio final — sentirse seguro — no del producto en sí. Tono más cercano, humano y accesible.</div>
-      <div style="font-size:12px;color:var(--muted);padding:8px 10px;background:var(--surface);border-radius:8px;border:1px solid var(--border2);"><strong style="color:var(--text);font-weight:500;">Punto a considerar:</strong> muy genérico como marca y puede ser difícil de proteger como nombre comercial. Funciona bien si el tono de Omnix va hacia lo emocional y familiar.</div>
+      <div style="font-family:'Nunito',sans-serif;font-size:22px;font-weight:800;color:#fff;margin-bottom:3px;">Omnix Guard</div>
+      <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;font-family:'Nunito',sans-serif;">Vigilancia · custodia · respuesta</div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:12px;">Directo y profesional. Conecta con el monitoreo y la respuesta ante emergencias. Tono más técnico y corporativo.</div>
+      <div style="font-size:12px;color:var(--muted);padding:8px 10px;background:var(--surface);border-radius:8px;border:1px solid var(--border2);font-style:italic;">"Omnix Guard. Tu hogar protegido 24/7."</div>
+    </div>
+    <div class="card">
+      <div style="font-family:'Nunito',sans-serif;font-size:22px;font-weight:800;color:#fff;margin-bottom:3px;">Omnix Secure</div>
+      <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;font-family:'Nunito',sans-serif;">Seguridad · confianza · claridad</div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:12px;">Descriptivo y directo. Cualquier cliente entiende qué es sin explicación. Tono equilibrado entre técnico y accesible.</div>
+      <div style="font-size:12px;color:var(--muted);padding:8px 10px;background:var(--surface);border-radius:8px;border:1px solid var(--border2);font-style:italic;">"Omnix Secure. Seguridad que controlás desde el celu."</div>
     </div>
   </div>
 
-  <div class="divider"></div>
-
-  <h3>Cómo aparece en la comunicación según el nombre elegido</h3>
-  <div class="card">
-    <div style="font-size:12px;color:var(--muted);margin-bottom:16px;line-height:1.6;">Ejemplos de cómo se usa el nombre en distintos touchpoints — para ayudar al cliente a visualizar la elección en contexto real.</div>
-    <table style="width:100%;border-collapse:collapse;font-size:13px;">
-      <thead>
-        <tr>
-          <th style="text-align:left;padding:8px 12px;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;border-bottom:1px solid var(--border2);">Touchpoint</th>
-          <th style="text-align:left;padding:8px 12px;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;border-bottom:1px solid var(--border2);">Omnix Guard</th>
-          <th style="text-align:left;padding:8px 12px;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;border-bottom:1px solid var(--border2);">Omnix Secure</th>
-          <th style="text-align:left;padding:8px 12px;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;border-bottom:1px solid var(--border2);">Omnix Safe</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td style="padding:9px 12px;border-bottom:1px solid var(--border);color:var(--muted);font-size:12px;">Landing page</td>
-          <td style="padding:9px 12px;border-bottom:1px solid var(--border);color:var(--text);">omnix.com.ar/guard</td>
-          <td style="padding:9px 12px;border-bottom:1px solid var(--border);color:var(--text);">omnix.com.ar/secure</td>
-          <td style="padding:9px 12px;border-bottom:1px solid var(--border);color:var(--text);">omnix.com.ar/safe</td>
-        </tr>
-        <tr>
-          <td style="padding:9px 12px;border-bottom:1px solid var(--border);color:var(--muted);font-size:12px;">Titular de anuncio</td>
-          <td style="padding:9px 12px;border-bottom:1px solid var(--border);color:var(--text);">"Omnix Guard. Tu hogar protegido 24/7."</td>
-          <td style="padding:9px 12px;border-bottom:1px solid var(--border);color:var(--text);">"Omnix Secure. Seguridad que se controla desde tu celular."</td>
-          <td style="padding:9px 12px;border-bottom:1px solid var(--border);color:var(--text);">"Omnix Safe. Dormí tranquilo, nosotros cuidamos."</td>
-        </tr>
-        <tr>
-          <td style="padding:9px 12px;border-bottom:1px solid var(--border);color:var(--muted);font-size:12px;">IG / Bio</td>
-          <td style="padding:9px 12px;border-bottom:1px solid var(--border);color:var(--text);">Omnix Guard — Seguridad inteligente</td>
-          <td style="padding:9px 12px;border-bottom:1px solid var(--border);color:var(--text);">Omnix Secure — Tu hogar, protegido</td>
-          <td style="padding:9px 12px;border-bottom:1px solid var(--border);color:var(--text);">Omnix Safe — Tecnología que cuida</td>
-        </tr>
-        <tr>
-          <td style="padding:9px 12px;color:var(--muted);font-size:12px;">WA chatbot</td>
-          <td style="padding:9px 12px;color:var(--text);">"Hola, soy el asistente de Omnix Guard."</td>
-          <td style="padding:9px 12px;color:var(--text);">"Hola, soy el asistente de Omnix Secure."</td>
-          <td style="padding:9px 12px;color:var(--text);">"Hola, soy el asistente de Omnix Safe."</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
+  <h3>Cómo aparece en los puntos de contacto</h3>
+  <table class="data-table">
+    <thead><tr><th>Touchpoint</th><th style="color:var(--owl-teal);">Omnix Safe</th><th>Omnix Guard</th><th>Omnix Secure</th></tr></thead>
+    <tbody>
+      <tr><td style="color:var(--muted);font-size:12px;">URL</td><td>omnix.com.ar/safe</td><td>omnix.com.ar/guard</td><td>omnix.com.ar/secure</td></tr>
+      <tr><td style="color:var(--muted);font-size:12px;">Titular ad</td><td>"Dormí tranquilo, nosotros cuidamos"</td><td>"Tu hogar protegido 24/7"</td><td>"Seguridad desde el celular"</td></tr>
+      <tr><td style="color:var(--muted);font-size:12px;">Bio Instagram</td><td>Omnix Safe — Tecnología que cuida</td><td>Omnix Guard — Seguridad inteligente</td><td>Omnix Secure — Tu hogar, protegido</td></tr>
+      <tr><td style="color:var(--muted);font-size:12px;">Chatbot WA</td><td>"Hola, soy el asistente de Omnix Safe"</td><td>"Hola, soy el asistente de Omnix Guard"</td><td>"Hola, soy el asistente de Omnix Secure"</td></tr>
+    </tbody>
+  </table>
 </section>
 
-<!-- ===== SMART HOME ===== -->
+<!-- ══════════════════════ MODELO ══════════════════════ -->
+<section class="section" id="modelo">
+  <div class="section-header">
+    <div class="section-tag">03 · Modelo de negocio</div>
+    <h1 class="section-title">Modelo de negocio</h1>
+    <p class="section-subtitle">Omnix como comerciante: selecciona los mejores productos, los integra, instala y soporta. El valor está en la curaduría, la experiencia y el servicio.</p>
+  </div>
+  <div class="highlight-box"><strong>Omnix es comerciante, no fabricante.</strong> Hoy revende el servicio ADT. Mañana incorporará otros productos y proveedores. La propuesta de valor no cambia con el producto — siempre es la misma: el mejor ecosistema tecnológico, instalado y soportado profesionalmente.</div>
+  <h3>Cadena de valor</h3>
+  <div class="grid-3">
+    <div class="card"><div class="badge bm">Proveedores</div><div class="card-title">ADT (vía NTI) + futuros</div><div class="card-body">Aportan el producto y la tecnología. En el caso de ADT: monitoreo 24/7, central de alarmas, comodato de equipos. Omnix es el canal de distribución.</div></div>
+    <div class="card" style="border-color:rgba(47,193,165,0.3);"><div class="badge ba">Omnix</div><div class="card-title">Selección · venta · instalación · soporte</div><div class="card-body">Capta leads, califica, cierra, coordina instalación y hace seguimiento. Toda la experiencia del cliente es Omnix. El proveedor puede cambiar y crecer.</div></div>
+    <div class="card"><div class="badge bb">Cliente</div><div class="card-title">Hogar · Comercio · Industria</div><div class="card-body">Paga abono mensual (ADT) o producto directo (smart home). La relación es de largo plazo — cada cliente es un candidato para nuevos productos.</div></div>
+  </div>
+  <h3>Fuentes de ingreso</h3>
+  <div class="grid-3">
+    <div class="card"><div class="badge ba">Activo hoy</div><div class="card-title">Comisión por instalación ADT</div><div class="card-body">Pago único al momento de instalar. Varía según el kit y el score crediticio del cliente.</div></div>
+    <div class="card"><div class="badge ba">Activo hoy</div><div class="card-title">% del abono mensual ADT</div><div class="card-body">Ingreso recurrente por cada cliente activo. Se acumula mes a mes. Base para financiar la expansión.</div></div>
+    <div class="card"><div class="badge bw">Fase 2+</div><div class="card-title">Venta directa smart home</div><div class="card-body">Cámaras, cerraduras, iluminación, automatización. Ticket más alto, sin abono obligatorio.</div></div>
+  </div>
+</section>
+
+<!-- ══════════════════════ POSICIONAMIENTO ══════════════════════ -->
 <section class="section" id="smarthome">
   <div class="section-header">
-    <div class="section-tag">Omnix — Posicionamiento</div>
-    <h1 class="section-title">Posicionamiento smart home</h1>
-    <p class="section-subtitle">La visión de largo plazo de Omnix como comercializadora de tecnología inteligente accesible para la clase media argentina.</p>
+    <div class="section-tag">04 · Posicionamiento</div>
+    <h1 class="section-title">Posicionamiento Omnix</h1>
+    <p class="section-subtitle">La visión de Omnix como comercializadora de tecnología inteligente y la posición que ocupa en el mercado.</p>
   </div>
-
   <div class="big-statement">
     Omnix democratiza el hogar inteligente.<br>
-    <span>No es para ricos. Es para cualquiera que tenga un celular.</span>
+    <span>Tecnología que antes era compleja, hoy es simple.</span>
   </div>
-
   <h3>La brecha que Omnix ocupa</h3>
   <div class="grid-2">
     <div class="card">
       <div class="badge bd">El problema hoy</div>
-      <div class="card-title">Mercado fragmentado sin solución accesible</div>
-      <div class="card-body">Las empresas de domótica premium (Haustech, Intelhome, Control4) apuntan a obras de alta gama. Las empresas de alarmas no cruzan hacia smart home. <strong>Nadie ofrece tecnología inteligente integrada, accesible y con instalación profesional</strong> para el segmento masivo.</div>
+      <div class="card-title">Mercado fragmentado sin solución integral</div>
+      <div class="card-body">Las empresas de domótica premium (Haustech, Intelhome, Control4) apuntan a obras de alta gama. Las de alarmas se quedan en el monitoreo. <strong>El espacio de tecnología inteligente integrada con instalación profesional aún está en construcción.</strong></div>
     </div>
-    <div class="card">
-      <div class="badge bs">La oportunidad</div>
-      <div class="card-title">Ser el primer jugador en esa intersección</div>
-      <div class="card-body">El consumidor ya no pregunta "¿qué es eso?" sino "¿cuándo venís a instalarlo?". El mercado está maduro. Solo falta una marca accesible, confiable y con instalación incluida que lo atienda sistemáticamente.</div>
+    <div class="card" style="border-color:rgba(47,193,165,0.3);">
+      <div class="badge ba">La oportunidad de Omnix</div>
+      <div class="card-title">Integrar lo que otros separan</div>
+      <div class="card-body">Omnix puede ser la marca que une seguridad + domótica + conectividad bajo un servicio profesional. <strong>El cliente no tiene que elegir entre una empresa de alarmas y una de smart home — Omnix es las dos cosas y más.</strong></div>
     </div>
   </div>
-
-  <h3>Los 4 pilares</h3>
-  <div class="grid-2">
-    <div class="card"><div class="badge bb">Pilar 1</div><div class="card-title">Seguridad como puerta de entrada</div><div class="card-body">La alarma es el primer contacto. Cada cliente instalado es un candidato para agregar cerradura inteligente, cámara con IA, luces automáticas. <strong>La seguridad abre la relación, la domótica la sostiene.</strong></div></div>
-    <div class="card"><div class="badge bb">Pilar 2</div><div class="card-title">Accesibilidad por diseño</div><div class="card-body"><strong>No hay obras, no hay tecnicismos, no hay presupuestos de millones.</strong> Un relé wifi detrás del interruptor existente ya es domótica. Argumento central: "No rompemos nada. Solo lo hacemos inteligente".</div></div>
-    <div class="card"><div class="badge bb">Pilar 3</div><div class="card-title">Ecosistema integrado</div><div class="card-body">Omnix vende una visión: <strong>todos los dispositivos del hogar hablando entre sí desde una sola app.</strong> Eso es valor que ningún retailer puede ofrecer porque ellos venden el dispositivo, no la integración.</div></div>
-    <div class="card"><div class="badge bb">Pilar 4</div><div class="card-title">Instalación profesional incluida</div><div class="card-body">El mayor freno del smart home en Argentina es el miedo a instalarlo. Omnix elimina esa fricción: <strong>vos elegís, nosotros instalamos, configuramos y enseñamos.</strong> Servicio llave en mano.</div></div>
-  </div>
-
   <div class="divider"></div>
-
-  <h3>Tagline y mensajes clave</h3>
-  <div class="card" style="margin-bottom:12px;border-left:3px solid var(--accent);">
-    <div class="card-title" style="font-size:18px;font-family:Syne;">"Tu hogar, inteligente."</div>
-    <div class="card-body" style="margin-top:4px;">Simple, aspiracional, no limita a alarmas ni a domótica. Crece con el negocio. Compatible con el hoy y el futuro.</div>
-  </div>
-  <div class="grid-3">
-    <div class="card"><div class="badge bm">Familias</div><div class="card-body"><strong>"Protección hoy, tecnología para siempre."</strong> Empezás con la alarma y terminás controlando toda tu casa desde el celular.</div></div>
-    <div class="card"><div class="badge bm">Comercios</div><div class="card-body"><strong>"Tu negocio, bajo control total."</strong> Desde la alarma hasta las cámaras y el acceso, todo integrado y visible desde un solo lugar.</div></div>
-    <div class="card"><div class="badge bm">Early adopters</div><div class="card-body"><strong>"No es ciencia ficción. Es Omnix."</strong> Para quienes quieren la domótica que vieron en YouTube, instalada esta semana.</div></div>
-  </div>
-
-  <div class="divider"></div>
-
-  <h3>Roadmap de productos — de alarma a ecosistema</h3>
+  <h3>Los pilares del posicionamiento</h3>
   <div class="card">
-    <div class="roadmap-item"><div class="roadmap-phase" style="background:rgba(34,197,94,0.15);color:#86EFAC;">Hoy</div><div><div class="roadmap-title">Omnix Security — Alarmas ADT</div><div class="roadmap-desc">Kits Climax, QOLSYS, Comercio CX y Galpón. Abono desde $70.900/mes. Motor de ingresos recurrentes y base de clientes para upsell.</div></div></div>
-    <div class="roadmap-item"><div class="roadmap-phase" style="background:rgba(245,158,11,0.15);color:#FCD34D;">Mes 3-6</div><div><div class="roadmap-title">Cámaras inteligentes con Video IA</div><div class="roadmap-desc">EZVIZ, Hikvision o Nest Cam. Venta directa + instalación. Detectan personas vs. mascotas vs. vehículos. Notificación en tiempo real.</div></div></div>
-    <div class="roadmap-item"><div class="roadmap-phase" style="background:rgba(245,158,11,0.15);color:#FCD34D;">Mes 6-12</div><div><div class="roadmap-title">Cerraduras inteligentes + Control de acceso</div><div class="roadmap-desc">Cerradura con código, huella o app. Alta demanda en comercios y barrios privados. Argumento: "ya no necesitás copias de llaves".</div></div></div>
-    <div class="roadmap-item"><div class="roadmap-phase" style="background:rgba(122,122,154,0.15);color:#9A9ABD;">Año 2</div><div><div class="roadmap-title">Iluminación inteligente + Automatización</div><div class="roadmap-desc">Relés wifi sin obra. Compatible con Alexa/Google Home. "No rompemos nada. Solo lo hacemos inteligente."</div></div></div>
-    <div class="roadmap-item"><div class="roadmap-phase" style="background:rgba(122,122,154,0.15);color:#9A9ABD;">Año 2+</div><div><div class="roadmap-title">Climatización + Energía + Cortinas motorizadas</div><div class="roadmap-desc">Termostatos inteligentes, control de AC, cortinas motorizadas por voz o sensor. Upsell premium para clientes con ecosistema base ya instalado.</div></div></div>
+    <div class="pillar">
+      <div class="pillar-num" style="background:rgba(47,193,165,0.15);color:var(--owl-teal);">1</div>
+      <div>
+        <div class="pillar-title">Seguridad como base, no como techo</div>
+        <div class="pillar-desc">La alarma ADT es el primer producto, no el destino final. Cada cliente instalado es un candidato natural para agregar cámara con IA, cerradura inteligente o iluminación automatizada. <strong>La seguridad abre la puerta. La tecnología inteligente la mantiene abierta.</strong></div>
+      </div>
+    </div>
+    <div class="pillar">
+      <div class="pillar-num" style="background:rgba(127,123,156,0.15);color:#C4A8E0;">2</div>
+      <div>
+        <div class="pillar-title">Ecosistema, no productos sueltos</div>
+        <div class="pillar-desc">Omnix vende la visión de que todos los dispositivos del hogar o negocio hablan entre sí desde una sola app. <strong>La promesa está clara; la ejecución se construye por etapas.</strong></div>
+      </div>
+    </div>
   </div>
-</section>
-
-<!-- ===== MODELO DE NEGOCIO ===== -->
-<section class="section" id="modelo">
-  <div class="section-header">
-    <div class="section-tag">Omnix Security — Producto inicial</div>
-    <h1 class="section-title">Modelo de negocio</h1>
-    <p class="section-subtitle">Cómo Omnix genera ingresos con el producto de seguridad y monitoreo en la etapa inicial.</p>
-  </div>
-
-  <h3>Cadena de valor</h3>
-  <div class="grid-3">
-    <div class="card"><div class="badge bm">Proveedor</div><div class="card-title">ADT Argentina (vía NTI)</div><div class="card-body">Aporta el producto, el monitoreo 24/7, la central de alarmas y el respaldo de marca. Los equipos son en comodato. Omnix actúa como canal comercial.</div></div>
-    <div class="card" style="border-color:rgba(0,229,192,0.3)"><div class="badge ba">Omnix</div><div class="card-title">Marca, venta y experiencia</div><div class="card-body">Capta leads, califica, cierra ventas, coordina instalación y hace seguimiento post-venta. Toda la experiencia del cliente es Omnix. La tecnología de fondo es ADT.</div></div>
-    <div class="card"><div class="badge bb">Cliente</div><div class="card-title">Hogar · Comercio · Smart home (futuro)</div><div class="card-body">Paga cuota mensual de abono. Recibe el equipo en comodato. Relación de largo plazo — permanencia promedio de 2 años o más.</div></div>
-  </div>
-
-  <h3>Fuentes de ingreso</h3>
-  <div class="grid-3">
-    <div class="card"><div class="badge bs">Ingreso 1</div><div class="card-title">Comisión por instalación</div><div class="card-body">Pago único al cerrar cada venta. Variable según el kit y las condiciones comerciales acordadas con NTI/ADT.</div></div>
-    <div class="card"><div class="badge bs">Ingreso 2</div><div class="card-title">% del abono mensual recurrente</div><div class="card-body">Porcentaje del abono que la franquicia transfiere mensualmente por cada cliente activo. Construye ingreso pasivo y predecible mes a mes.</div></div>
-    <div class="card"><div class="badge bs">Ingreso 3 (futuro)</div><div class="card-title">Venta de productos smart home</div><div class="card-body">Cámaras, cerraduras, iluminación, automatización. Venta directa + instalación. Margen propio sin dependencia de ADT. A partir de fase 2.</div></div>
-  </div>
-
   <div class="divider"></div>
-
-  <h3>Ventaja diferencial sobre otros agentes ADT</h3>
-  <div class="danger-box">
-    <strong>Nota sobre los datos:</strong> Los agentes mencionados a continuación fueron identificados en búsquedas públicas de Instagram y Google. El listado oficial de agentes ADT Argentina está detrás de un acceso restringido en adt.com.ar y no es públicamente verificable. Se recomienda corroborar directamente con NTI antes de usar esta información en presentaciones.
-  </div>
-  <div class="grid-2">
-    <div class="card">
-      <div class="badge bd">Agentes ADT relevados (RRSS)</div>
-      <div class="card-title">Lo que hacen hoy</div>
-      <div class="comp-row"><span class="comp-label">@adt_alarmasconmonitoreo</span><span class="comp-val">3.124 seguidores · 45 posts</span></div>
-      <div class="comp-row"><span class="comp-label">@adtmardeplata</span><span class="comp-val">1.236 seguidores · 41 posts</span></div>
-      <div class="comp-row"><span class="comp-label">@adt_alarma</span><span class="comp-val">228 seguidores · 17 posts</span></div>
-      <div class="comp-row"><span class="comp-label">Estrategia general</span><span class="comp-val">Sin contenido, sin chatbot, respuesta manual lenta</span></div>
-    </div>
-    <div class="card" style="border-color:rgba(0,229,192,0.3)">
-      <div class="badge ba">Omnix</div>
-      <div class="card-title">Lo que Omnix hace diferente</div>
-      <div class="comp-row"><span class="comp-label">Respuesta</span><span class="comp-val">&lt;2 minutos via chatbot automatizado</span></div>
-      <div class="comp-row"><span class="comp-label">Calificación</span><span class="comp-val">IA califica leads sin intervención humana</span></div>
-      <div class="comp-row"><span class="comp-label">Contenido</span><span class="comp-val">Estrategia editorial consistente con foco educativo</span></div>
-      <div class="comp-row"><span class="comp-label">Visión</span><span class="comp-val">Smart home: diferencial de largo plazo</span></div>
-    </div>
+  <h3>Mensajes clave por audiencia</h3>
+  <div class="grid-3">
+    <div class="card"><div class="badge bm">Omnix global</div><div class="card-body"><strong>"Tu hogar, inteligente."</strong><br>Simple y aspiracional. Funciona hoy con alarmas y mañana con domótica completa.</div></div>
+    <div class="card"><div class="badge bm">Comercios</div><div class="card-body"><strong>"Tu negocio, bajo control total."</strong><br>Desde la alarma hasta las cámaras y el control de acceso, todo integrado.</div></div>
+    <div class="card"><div class="badge bm">Early adopters</div><div class="card-body"><strong>"No es ciencia ficción. Es Omnix."</strong><br>Para quienes quieren la domótica instalada esta semana, sin tecnicismos.</div></div>
   </div>
 </section>
 
-<!-- ===== SEGMENTOS ===== -->
+<!-- ══════════════════════ SEGMENTOS ══════════════════════ -->
 <section class="section" id="segmentos">
   <div class="section-header">
-    <div class="section-tag">Omnix Security — Segmentos</div>
-    <h1 class="section-title">Segmentos y perfiles de cliente</h1>
-    <p class="section-subtitle">A quién le vende Omnix Security hoy. Tres subsegmentos B2C y tres B2B, cada uno con motivadores y mensajes distintos.</p>
+    <div class="section-tag">05 · Segmentos y perfiles</div>
+    <h1 class="section-title">Segmentos y perfiles</h1>
+    <p class="section-subtitle">Los segmentos de Omnix Safe y los de Omnix global no son los mismos. Se presentan por separado — el motivador de compra es distinto en cada caso.</p>
+  </div>
+  <h3>Segmentos Omnix Safe — línea de seguridad ADT</h3>
+  <div class="info-box">Los motivadores de compra en seguridad son emocionales: <strong>el miedo, la inseguridad reciente, el cansancio de los robos, el querer proteger lo que se construyó.</strong> El cliente no busca tecnología — busca tranquilidad. El momento de compra suele ser reactivo.</div>
+  <div class="grid-3" style="margin-bottom:8px;">
+    <div class="seg-card"><div class="badge ba">Perfil 1</div><div class="seg-title">La persona que trabaja afuera todo el día</div><div class="seg-body">Sale temprano, vuelve tarde. Su casa queda sola horas. Le preocupa no saber qué pasa adentro, especialmente si tiene hijos que llegan solos. <strong>El control remoto desde el celular es su principal driver.</strong></div><div class="seg-tags"><span class="seg-tag">25–45 años</span><span class="seg-tag">Empleado / profesional</span><span class="seg-tag">App ADT</span></div></div>
+    <div class="seg-card"><div class="badge ba">Perfil 2</div><div class="seg-title">La persona que viaja frecuentemente</div><div class="seg-body">Viajes de trabajo o vacaciones. Deja la casa sola días o semanas. Quiere saber que está protegida y poder verla. <strong>Las cámaras y las notificaciones en tiempo real son clave.</strong></div><div class="seg-tags"><span class="seg-tag">30–55 años</span><span class="seg-tag">Viajes frecuentes</span><span class="seg-tag">Video Inteligencia</span></div></div>
+    <div class="seg-card"><div class="badge ba">Perfil 3</div><div class="seg-title">La persona que tiene mascotas</div><div class="seg-body">Quiere saber cómo están sus mascotas cuando no está. Los sensores registran la actividad del hogar. <strong>El sistema puede configurarse para monitorear su rutina.</strong></div><div class="seg-tags"><span class="seg-tag">Mascotas en el hogar</span><span class="seg-tag">Notificaciones</span><span class="seg-tag">Sensores movimiento</span></div></div>
+    <div class="seg-card"><div class="badge bo">Perfil 4</div><div class="seg-title">La persona que tiene miedo / vivió un robo</div><div class="seg-body">Ya tuvo un episodio de inseguridad o alguien cercano lo vivió. <strong>Es el cliente más caliente: está buscando una solución ahora mismo.</strong></div><div class="seg-tags"><span class="seg-tag">Alta urgencia</span><span class="seg-tag">Reactivo</span><span class="seg-tag">Mejor momento de contacto</span></div></div>
+    <div class="seg-card"><div class="badge ba">Perfil 5</div><div class="seg-title">La persona que se mudó a un barrio nuevo</div><div class="seg-body">No conoce el barrio, no tiene red de vecinos todavía. El sistema le da tranquilidad mientras se adapta. <strong>Alta predisposición en los primeros meses de mudanza.</strong></div><div class="seg-tags"><span class="seg-tag">Reciente mudanza</span><span class="seg-tag">Zona nueva</span><span class="seg-tag">Propietario o inquilino</span></div></div>
+    <div class="seg-card"><div class="badge ba">Perfil 6</div><div class="seg-title">Familia que cuida adultos mayores</div><div class="seg-body">Hijo/a que contrata el servicio para la casa de sus padres. El botón de pánico y las alertas médicas son los diferenciales. <strong>El decisor no vive en la propiedad.</strong></div><div class="seg-tags"><span class="seg-tag">Decisor: hijo/a</span><span class="seg-tag">Botón pánico</span><span class="seg-tag">Emergencia médica</span></div></div>
+  </div>
+  <div class="divider"></div>
+  <h3>Segmentos B2B — Omnix Safe para comercios</h3>
+  <div class="grid-3">
+    <div class="seg-card"><div class="badge bw">Comercio local</div><div class="seg-title">Pyme con 1 local</div><div class="seg-body">Dueño quiere protección fuera de horario y saber quién abre/cierra. <strong>Decisor único, ticket accesible.</strong></div><div class="seg-tags"><span class="seg-tag">Kit CX 2.1</span><span class="seg-tag">Decisor = dueño</span></div></div>
+    <div class="seg-card"><div class="badge bw">Multi-sucursal</div><div class="seg-title">Empresa con 2+ locales</div><div class="seg-body">El diferencial es la Consola Empresarial ADT: monitoreo centralizado, reportes, gestión de usuarios por sucursal.</div><div class="seg-tags"><span class="seg-tag">Consola empresarial</span><span class="seg-tag">Ticket alto</span></div></div>
+    <div class="seg-card"><div class="badge bw">Industrial</div><div class="seg-title">Galpón / depósito</div><div class="seg-body">Requieren sensores de doble tecnología para espacios sin aislante térmico. Contratos de mayor permanencia.</div><div class="seg-tags"><span class="seg-tag">Kit Galpón CX 2.2</span><span class="seg-tag">Doble tecnología</span></div></div>
+  </div>
+  <div class="divider"></div>
+  <h3>Segmentos Omnix Home — smart home (fase 2)</h3>
+  <div class="info-box">Aquí el motivador es el <strong>confort, la eficiencia y el deseo de tecnología</strong> — no el miedo. Son perfiles con mayor adopción tech y mayor poder adquisitivo.</div>
+  <div class="grid-3">
+    <div class="seg-card"><div class="badge bp">Early adopter</div><div class="seg-title">Usuario tech-savvy</div><div class="seg-body">Ya usa dispositivos smart, quiere integrarlos profesionalmente. Busca una solución que funcione sin hacerla él mismo.</div><div class="seg-tags"><span class="seg-tag">25–40 años</span><span class="seg-tag">Alta adopción tech</span></div></div>
+    <div class="seg-card"><div class="badge bp">Hogar en obra</div><div class="seg-title">Refacción o construcción</div><div class="seg-body">Quiere integrar automatización desde el inicio. "No rompemos nada, solo lo hacemos inteligente."</div><div class="seg-tags"><span class="seg-tag">Obra o refacción</span><span class="seg-tag">Ticket alto</span></div></div>
+    <div class="seg-card"><div class="badge bp">Empresa eficiente</div><div class="seg-title">Empresa que optimiza</div><div class="seg-body">Automatización de iluminación, clima y acceso para mejorar eficiencia operativa y ahorro energético.</div><div class="seg-tags"><span class="seg-tag">B2B</span><span class="seg-tag">Ahorro energético</span></div></div>
+  </div>
+</section>
+
+<!-- ══════════════════════ COMPETIDORES ══════════════════════ -->
+<section class="section" id="competidores">
+  <div class="section-header">
+    <div class="section-tag">06 · Análisis competitivo</div>
+    <h1 class="section-title">Análisis competitivo</h1>
+    <p class="section-subtitle">Competidores directos e indirectos para la línea Omnix Safe. El mapa competitivo de Omnix Home se construirá cuando se lance esa línea.</p>
+  </div>
+  <h3>Competidores directos — Omnix Safe</h3>
+  <div class="grid-2">
+    <div class="card"><div class="badge bd">Máxima amenaza</div><div class="card-title">Verisure Argentina</div>
+      <div class="comp-row"><span class="comp-label">Instagram</span><span class="comp-val">82K seguidores · 853 posts</span></div>
+      <div class="comp-row"><span class="comp-label">Diferencial</span><span class="comp-val">ZeroVision · vigilantes motorizados</span></div>
+      <div class="comp-row"><span class="comp-label">Debilidad</span><span class="comp-val">Precio alto · sin smart home</span></div>
+      <div class="comp-row"><span class="comp-label">Para Omnix</span><span class="comp-val">Mejor precio + ecosistema tecnológico</span></div>
+    </div>
+    <div class="card"><div class="badge bd">Alta amenaza</div><div class="card-title">ADT Argentina (canal directo)</div>
+      <div class="comp-row"><span class="comp-label">Facebook</span><span class="comp-val">95K seguidores</span></div>
+      <div class="comp-row"><span class="comp-label">Diferencial</span><span class="comp-val">Marca global · mayor cobertura</span></div>
+      <div class="comp-row"><span class="comp-label">Debilidad</span><span class="comp-val">Burocrático · impersonal · lento</span></div>
+      <div class="comp-row"><span class="comp-label">Para Omnix</span><span class="comp-val">Mismo producto, mejor experiencia</span></div>
+    </div>
+    <div class="card"><div class="badge bw">Amenaza media</div><div class="card-title">Prosegur Argentina</div>
+      <div class="comp-row"><span class="comp-label">Instagram</span><span class="comp-val">44K seguidores · 458 posts</span></div>
+      <div class="comp-row"><span class="comp-label">Diferencial</span><span class="comp-val">Marca conocida · motoristas</span></div>
+      <div class="comp-row"><span class="comp-label">Debilidad</span><span class="comp-val">Corporativo · no digital-first</span></div>
+      <div class="comp-row"><span class="comp-label">Para Omnix</span><span class="comp-val">Agilidad y tecnología vs. estructura pesada</span></div>
+    </div>
+    <div class="card"><div class="badge ba">Oportunidad clara</div><div class="card-title">Otros agentes ADT</div>
+      <div class="comp-row"><span class="comp-label">Instagram</span><span class="comp-val">~1.200–3.100 seguidores (relevado)</span></div>
+      <div class="comp-row"><span class="comp-label">Contenido</span><span class="comp-val">Escaso, genérico, sin estrategia</span></div>
+      <div class="comp-row"><span class="comp-label">Debilidad</span><span class="comp-val">Sin presencia digital real</span></div>
+      <div class="comp-row"><span class="comp-label">Para Omnix</span><span class="comp-val">Barra muy baja — fácil de superar</span></div>
+    </div>
+  </div>
+  <h3>Competidores indirectos</h3>
+  <div class="grid-2">
+    <div class="card"><div class="badge bm">Indirecto</div><div class="card-title">Seguros del hogar</div><div class="card-body">Actúan post-evento, sobre bienes materiales. Omnix Safe previene. Son complementarios, no excluyentes.</div></div>
+    <div class="card"><div class="badge bm">Indirecto</div><div class="card-title">Alarmas comunitarias · Cámaras DIY</div><div class="card-body">Dependen de vecinos disponibles y graban pero no actúan. Sin monitoreo profesional ni respuesta real.</div></div>
+  </div>
+  <div class="highlight-box"><strong>Hallazgo clave:</strong> Ningún competidor habla de smart home ni educa sobre tecnología. Omnix puede ser la primera marca que ocupe ese espacio de forma consistente y diferenciada.</div>
+</section>
+
+<!-- ══════════════════════ PRODUCTOS ══════════════════════ -->
+<section class="section" id="productos">
+  <div class="section-header">
+    <div class="section-tag">07 · Productos y precios</div>
+    <h1 class="section-title">Productos y precios</h1>
+    <p class="section-subtitle">Fichas simplificadas de los kits disponibles. Fichas completas a desarrollar con material adicional del cliente.</p>
+  </div>
+  <div class="warn-box"><strong>Importante:</strong> Los equipos se entregan en comodato. Al cliente solo se le cobra el costo de instalación y el abono mensual. Los elementos adicionales que el cliente requiera se cobran aparte porque los compra.</div>
+
+  <h3>Línea Climax — totalmente inalámbrica</h3>
+  <div class="prod-card">
+    <div class="prod-header"><div><div class="badge ba">Int. Security</div><div class="prod-name">Climax Int. Sec. 1.1 / 2.2</div></div><div class="prod-price">$70.900/mes</div></div>
+    <div class="prod-body">
+      <div><div class="prod-field-label">Uso recomendado</div><div class="prod-field-val">Casa con aislante · Comercio sin fuentes de calor</div></div>
+      <div><div class="prod-field-label">Incluye</div><div class="prod-field-val">1.1: 1 magnético + 1 PIR · 2.2: 2 magnéticos + 2 PIR · Central + teclado + sirena + SEM</div></div>
+      <div><div class="prod-field-label">Diferencial</div><div class="prod-field-val">100% inalámbrico · Panel numérico · Preparado para domótica</div></div>
+    </div>
+  </div>
+  <div class="prod-card">
+    <div class="prod-header"><div><div class="badge ba">Int. Security View</div><div class="prod-name">Climax Int. Sec. 1.1 / 2.2 View (Interior o Exterior)</div></div><div class="prod-price">$79.900/mes</div></div>
+    <div class="prod-body">
+      <div><div class="prod-field-label">Uso recomendado</div><div class="prod-field-val">Casa con aislante · Comercio sin fuentes de calor</div></div>
+      <div><div class="prod-field-label">Incluye</div><div class="prod-field-val">Todo lo del kit base + cámara IP HD (interior o exterior)</div></div>
+      <div><div class="prod-field-label">Diferencial</div><div class="prod-field-val">Video inteligente · Grabación ante eventos · Requiere WiFi</div></div>
+    </div>
   </div>
 
-  <h3>B2C — Residencial (3 subsegmentos)</h3>
-
-  <div class="grid-3">
-    <div class="persona-card">
-      <div class="badge ba">B2C · Sub 1</div>
-      <div class="persona-name">El inquilino con familia</div>
-      <div class="persona-age">30–45 años · alquila o vive con familia</div>
-      <div class="persona-row"><span class="persona-key">Perfil</span><span class="persona-val">No necesariamente propietario. Tiene hijos o adultos mayores en casa. Trabaja fuera del hogar durante el día.</span></div>
-      <div class="persona-row"><span class="persona-key">Motivador</span><span class="persona-val">Saber que su familia está protegida cuando él no está. Control remoto desde el celular.</span></div>
-      <div class="persona-row"><span class="persona-key">Objeción</span><span class="persona-val">"No soy el dueño del departamento, no sé si puedo instalarlo."</span></div>
-      <div class="persona-row"><span class="persona-key">Respuesta</span><span class="persona-val">Los equipos son inalámbricos y en comodato — no requieren obra ni permiso del propietario.</span></div>
-      <div class="persona-row"><span class="persona-key">Kit sugerido</span><span class="persona-val">Climax 1.1 o QOLSYS 1.1</span></div>
+  <h3>Línea Comercio y Galpón — doble tecnología</h3>
+  <div class="prod-card">
+    <div class="prod-header"><div><div class="badge bw">Int. Security</div><div class="prod-name">Kit Comercio CX 2.1 / Kit Galpón CX 2.2</div></div><div class="prod-price">$70.900/mes</div></div>
+    <div class="prod-body">
+      <div><div class="prod-field-label">Uso recomendado</div><div class="prod-field-val">Casa sin aislante · Comercio con calor · Galpón industrial</div></div>
+      <div><div class="prod-field-label">Incluye</div><div class="prod-field-val">2 PIR doble tecnología + 2 magnéticos · Central + sirena + SEM</div></div>
+      <div><div class="prod-field-label">Diferencial</div><div class="prod-field-val">Sensores inmunes a calor · Ideal para galpones y depósitos</div></div>
     </div>
-
-    <div class="persona-card">
-      <div class="badge ba">B2C · Sub 2</div>
-      <div class="persona-name">El propietario consolidado</div>
-      <div class="persona-age">45–60 años · propietario · casa propia</div>
-      <div class="persona-row"><span class="persona-key">Perfil</span><span class="persona-val">Tiene casa propia, zona residencial. Puede tener segunda propiedad o casa de fin de semana. Ingresos medios-altos.</span></div>
-      <div class="persona-row"><span class="persona-key">Motivador</span><span class="persona-val">Proteger su patrimonio. Tranquilidad durante vacaciones o ausencias prolongadas.</span></div>
-      <div class="persona-row"><span class="persona-key">Objeción</span><span class="persona-val">"Ya tengo alarma comunitaria con el barrio."</span></div>
-      <div class="persona-row"><span class="persona-key">Respuesta</span><span class="persona-val">La alarma comunitaria depende de vecinos disponibles. Omnix tiene respuesta profesional 24/7 con contacto policial directo.</span></div>
-      <div class="persona-row"><span class="persona-key">Kit sugerido</span><span class="persona-val">Climax 2.2 View o QOLSYS 2.2</span></div>
+  </div>
+  <div class="prod-card">
+    <div class="prod-header"><div><div class="badge bw">Int. Security View</div><div class="prod-name">Kit Comercio / Galpón CX con Cámara (Int. o Ext.)</div></div><div class="prod-price">$79.900/mes</div></div>
+    <div class="prod-body">
+      <div><div class="prod-field-label">Uso recomendado</div><div class="prod-field-val">Mismo uso que CX base + necesidad de video verificación</div></div>
+      <div><div class="prod-field-label">Incluye</div><div class="prod-field-val">Todo lo del kit CX + cámara IP HD interior o exterior</div></div>
+      <div><div class="prod-field-label">Diferencial</div><div class="prod-field-val">Video analítica · Detección personas / vehículos · Requiere WiFi</div></div>
     </div>
+  </div>
 
-    <div class="persona-card">
-      <div class="badge ba">B2C · Sub 3</div>
-      <div class="persona-name">El adulto joven tech-first</div>
-      <div class="persona-age">22–35 años · vive solo o en pareja</div>
-      <div class="persona-row"><span class="persona-key">Perfil</span><span class="persona-val">Alquila, vive solo o con pareja. Sin hijos. Muy digital. Ya usa apps para todo en su vida. Potencial early adopter de smart home.</span></div>
-      <div class="persona-row"><span class="persona-key">Motivador</span><span class="persona-val">Control total desde el celular. Tecnología. No quiere depender de nadie para que su casa esté segura.</span></div>
-      <div class="persona-row"><span class="persona-key">Objeción</span><span class="persona-val">"Es muy caro para lo que es solo una alarma."</span></div>
-      <div class="persona-row"><span class="persona-key">Respuesta</span><span class="persona-val">No es solo una alarma: es control remoto, cámara, automatización y geo-servicios. Y el valor del servicio supera lo que cuesta.</span></div>
-      <div class="persona-row"><span class="persona-key">Kit sugerido</span><span class="persona-val">QOLSYS View + cámara interior (upsell)</span></div>
+  <h3>Línea QOLSYS — panel inteligente (tope de gama)</h3>
+  <div class="prod-card">
+    <div class="prod-header"><div><div class="badge bp">Panel Inteligente</div><div class="prod-name">Int. Security 1.1 / 2.2 QOLSYS · Kit Interactive 2.2 pircam</div></div><div class="prod-price">$70.900/mes</div></div>
+    <div class="prod-body">
+      <div><div class="prod-field-label">Uso recomendado</div><div class="prod-field-val">Casa con aislante · Comercio sin fuentes de calor</div></div>
+      <div><div class="prod-field-label">Incluye</div><div class="prod-field-val">Panel táctil tipo tablet · 2 PIR con cámara de foto · 2 magnéticos · Central + SEM</div></div>
+      <div><div class="prod-field-label">Diferencial</div><div class="prod-field-val">Tope de gama ADT · Z-Wave / domótica · 100% inalámbrico</div></div>
+    </div>
+  </div>
+  <div class="prod-card">
+    <div class="prod-header"><div><div class="badge bp">Panel + Video</div><div class="prod-name">Int. Security Video View 1.1 / 2.2 QOLSYS (Int. o Ext.)</div></div><div class="prod-price">$79.900/mes</div></div>
+    <div class="prod-body">
+      <div><div class="prod-field-label">Uso recomendado</div><div class="prod-field-val">Casa con aislante · Comercio sin fuentes de calor</div></div>
+      <div><div class="prod-field-label">Incluye</div><div class="prod-field-val">Todo lo del QOLSYS base + cámara IP HD int. o ext.</div></div>
+      <div><div class="prod-field-label">Diferencial</div><div class="prod-field-val">Solución más completa del catálogo · Video en tiempo real</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ ROADMAP ══════════════════════ -->
+<section class="section" id="roadmap">
+  <div class="section-header">
+    <div class="section-tag">08 · Roadmap</div>
+    <h1 class="section-title">Roadmap de producto</h1>
+    <p class="section-subtitle">Línea de tiempo sin fechas. Las etapas futuras están marcadas como ideas — no son compromisos, son exploraciones.</p>
+  </div>
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-phase">Hoy — activo</div>
+      <div class="tl-title">Omnix Safe — Seguridad monitoreada ADT</div>
+      <ul class="tl-items">
+        <li>Kits Climax, QOLSYS, Comercio CX y Galpón</li>
+        <li>Abono mensual desde $70.900</li>
+        <li>Monitoreo 24/7 · Respuesta policial · App ADT</li>
+        <li>Motor de ingresos recurrentes y base de clientes</li>
+      </ul>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot dim"></div>
+      <div class="tl-phase dim">Ideas · Próxima etapa</div>
+      <div class="tl-title" style="color:rgba(255,255,255,0.7);">Cámaras inteligentes con Video IA</div>
+      <ul class="tl-items">
+        <li class="dim">Cámaras standalone sin monitoreo obligatorio</li>
+        <li class="dim">Detección de personas / animales / vehículos (IA)</li>
+        <li class="dim">Ticket adicional independiente del abono ADT</li>
+        <li class="dim">Entrada natural al universo Omnix Home</li>
+      </ul>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot dim"></div>
+      <div class="tl-phase dim">Ideas · Etapa futura</div>
+      <div class="tl-title" style="color:rgba(255,255,255,0.7);">Cerraduras inteligentes + Control de acceso</div>
+      <ul class="tl-items">
+        <li class="dim">Cerradura con código, huella dactilar o app</li>
+        <li class="dim">Alta demanda en comercios y barrios privados</li>
+        <li class="dim">Integración con el sistema de alarma existente</li>
+      </ul>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot dim"></div>
+      <div class="tl-phase dim">Ideas · Etapa futura</div>
+      <div class="tl-title" style="color:rgba(255,255,255,0.7);">Iluminación inteligente + Automatización</div>
+      <ul class="tl-items">
+        <li class="dim">Relés wifi detrás de interruptores existentes — sin obra</li>
+        <li class="dim">Compatible con Alexa y Google Home</li>
+        <li class="dim">Cortinas motorizadas, sensores de presencia</li>
+      </ul>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot dim"></div>
+      <div class="tl-phase dim">Ideas · Exploración</div>
+      <div class="tl-title" style="color:rgba(255,255,255,0.5);">Omnix Connect — Conectividad inteligente</div>
+      <ul class="tl-items">
+        <li class="dim">Reventa o agencia de servicios de fibra óptica / internet</li>
+        <li class="dim">Equipos WiFi mesh instalados profesionalmente</li>
+        <li class="dim">Conectividad como base del ecosistema smart home</li>
+        <li class="dim">Modelo de negocio a definir</li>
+      </ul>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot dim"></div>
+      <div class="tl-phase dim">Ideas · Exploración</div>
+      <div class="tl-title" style="color:rgba(255,255,255,0.5);">Climatización + Energía + Audio</div>
+      <ul class="tl-items">
+        <li class="dim">Termostatos inteligentes y control de AC desde la app</li>
+        <li class="dim">Audio distribuido en el hogar</li>
+        <li class="dim">Monitoreo y ahorro energético</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ VENTAS ══════════════════════ -->
+<section class="section" id="ventas">
+  <div class="section-header">
+    <div class="section-tag">09 · Estrategia de ventas</div>
+    <h1 class="section-title">Estrategia de ventas</h1>
+    <p class="section-subtitle">Basada en el Manual de Capacitación NTI/ADT y adaptada a la identidad de Omnix. La velocidad de contacto es el factor más crítico del proceso.</p>
+  </div>
+  <div class="danger-box"><strong>El cliente está en caliente.</strong> El lead llega porque tuvo miedo, hubo un robo en el barrio, se cansó de la inseguridad o quiere prevenir. Ese estado emocional dura horas. Si no lo contactamos a tiempo, se enfría — y la competencia lo captura.</div>
+  <h3>Speech de ventas — estructura</h3>
+  <div class="card">
+    <div class="pillar"><div class="pillar-num" style="background:rgba(47,193,165,0.15);color:var(--owl-teal);">1</div><div><div class="pillar-title">Contacto y escucha activa</div><div class="pillar-desc">Detectar provincia, localidad, situación de inseguridad. Generar familiaridad. No pedir datos sensibles todavía.</div></div></div>
+    <div class="pillar"><div class="pillar-num" style="background:rgba(47,193,165,0.15);color:var(--owl-teal);">2</div><div><div class="pillar-title">Detección de necesidades</div><div class="pillar-desc">¿Tuvo un problema? ¿Es preventivo? Presentar Omnix Safe como herramienta multifuncional — no solo alarma.</div></div></div>
+    <div class="pillar"><div class="pillar-num" style="background:rgba(47,193,165,0.15);color:var(--owl-teal);">3</div><div><div class="pillar-title">3 atributos de marca</div><div class="pillar-desc">El cliente debe quedarse con 3 razones sólidas para elegir Omnix Safe sobre cualquier otra opción.</div></div></div>
+    <div class="pillar"><div class="pillar-num" style="background:rgba(47,193,165,0.15);color:var(--owl-teal);">4</div><div><div class="pillar-title">Cierre y Score Veraz</div><div class="pillar-desc">DNI para verificación crediticia. Propuesta según score crediticio. Somos nosotros quienes proponemos los tiempos.</div></div></div>
+    <div class="pillar"><div class="pillar-num" style="background:rgba(47,193,165,0.15);color:var(--owl-teal);">5</div><div><div class="pillar-title">Contrato 100% digital</div><div class="pillar-desc">Presupuesto → link de pago → foto DNI → firma electrónica. Sin papel, sin reuniones presenciales.</div></div></div>
+    <div class="pillar"><div class="pillar-num" style="background:rgba(47,193,165,0.15);color:var(--owl-teal);">6</div><div><div class="pillar-title">Post-venta y referidos</div><div class="pillar-desc">A los 30 días post-instalación: solicitar referidos con incentivo (1 mes bonificado). Cada cliente activo es un vendedor latente.</div></div></div>
+  </div>
+  <div class="divider"></div>
+  <h3>Las 5 objeciones y cómo responderlas</h3>
+  <div class="obj-item"><div class="obj-header" onclick="toggleObj(this)"><span class="obj-q">"Prefiero contratar un seguro"</span><span class="obj-toggle">+</span></div><div class="obj-body">Un seguro actúa <strong>después</strong> del robo y solo repone bienes materiales. Omnix Safe <strong>previene</strong> — evita el trauma de la intrusión. ¿Cómo se repone el valor sentimental de un objeto robado? El seguro y la alarma no son excluyentes, pero la alarma protege lo que el seguro no puede: la seguridad física de quienes están adentro.</div></div>
+  <div class="obj-item"><div class="obj-header" onclick="toggleObj(this)"><span class="obj-q">"El costo es muy caro"</span><span class="obj-toggle">+</span></div><div class="obj-body">Entendemos que la comparación de precios es natural. Pero la pregunta real no es si el abono es caro — es <strong>qué prioridad le das a tu seguridad y la de tu familia</strong>. Omnix Safe funciona las 24 horas, todos los días, mientras dormís, trabajás o estás de viaje. La tranquilidad tiene un costo mensual concreto; el costo de un robo o una situación de inseguridad es impredecible y mucho mayor.</div></div>
+  <div class="obj-item"><div class="obj-header" onclick="toggleObj(this)"><span class="obj-q">"Prefiero una alarma comunitaria"</span><span class="obj-toggle">+</span></div><div class="obj-body">Las alarmas comunitarias dependen de que los vecinos estén disponibles, despiertos y con tiempo en el momento exacto del incidente. Omnix Safe tiene <strong>respuesta profesional 24/7</strong> con protocolos definidos y vínculo directo con fuerzas de seguridad. No importa si son las 3 de la mañana o si todos los vecinos están de vacaciones.</div></div>
+  <div class="obj-item"><div class="obj-header" onclick="toggleObj(this)"><span class="obj-q">"Prefiero solo cámaras"</span><span class="obj-toggle">+</span></div><div class="obj-body">Las cámaras <strong>graban lo que pasa, pero no actúan</strong>. Son un registro, no una prevención. Omnix Safe combina sensores, central de monitoreo y respuesta policial inmediata. Las cámaras son un complemento valioso — por eso los kits View incluyen ambas cosas.</div></div>
+  <div class="obj-item"><div class="obj-header" onclick="toggleObj(this)"><span class="obj-q">"Sigo agregando costos fijos"</span><span class="obj-toggle">+</span></div><div class="obj-body">Es una preocupación válida. Pero pensalo al revés: <strong>¿cuánto te costaría un robo?</strong> En un comercio, además de la pérdida de mercadería, está el tiempo de cierre, la reparación de daños y el impacto en el equipo. En un hogar, el costo emocional es incalculable. Omnix Safe es el costo fijo que evita los costos variables impredecibles y mucho más altos.</div></div>
+</section>
+
+<!-- ══════════════════════ FUNNEL ══════════════════════ -->
+<section class="section" id="funnel">
+  <div class="section-header">
+    <div class="section-tag">10 · Embudo de conversión</div>
+    <h1 class="section-title">Embudo de conversión</h1>
+    <p class="section-subtitle">Dos puntos de entrada posibles. La velocidad de contacto es el factor más crítico — el lead llega en caliente y ese estado dura horas.</p>
+  </div>
+  <div class="danger-box"><strong>El momento de compra es emocional.</strong> El lead llega porque tiene miedo, quiere prevenir o está harto de la inseguridad. Cada minuto que pasa enfría ese estado. <strong>El objetivo es contactar en menos de 2 minutos desde que el lead llega.</strong></div>
+
+  <h3>Dos puntos de entrada</h3>
+  <div class="grid-2">
+    <div>
+      <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;font-family:'Nunito',sans-serif;">→ Entrada A · Landing page</div>
+      <div class="flow">
+        <div class="flow-node accent"><div class="flow-node-title">Anuncio / RRSS / Google</div><div class="flow-node-desc">El lead hace clic y aterriza en la landing de hogar o comercio.</div></div>
+        <div class="flow-connector"><div class="flow-line"></div><div class="flow-arrow"></div></div>
+        <div class="flow-node"><div class="flow-node-title">Formulario de 3 campos</div><div class="flow-node-desc">Nombre · teléfono · tipo de propiedad. Dispara el CRM y el bot automáticamente.</div></div>
+        <div class="flow-connector"><div class="flow-line"></div><div class="flow-arrow"></div></div>
+        <div class="flow-node warn"><div class="flow-node-title">Bot de WhatsApp — inmediato</div><div class="flow-node-desc"><strong>Tiempo máximo: 2 minutos.</strong> El bot contacta al lead de inmediato con las preguntas de calificación.</div></div>
+      </div>
+    </div>
+    <div>
+      <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;font-family:'Nunito',sans-serif;">→ Entrada B · WhatsApp directo</div>
+      <div class="flow">
+        <div class="flow-node accent"><div class="flow-node-title">Anuncio con CTA a WhatsApp</div><div class="flow-node-desc">El lead hace clic y abre WhatsApp directamente. Sin intermediarios.</div></div>
+        <div class="flow-connector"><div class="flow-line"></div><div class="flow-arrow"></div></div>
+        <div class="flow-node warn"><div class="flow-node-title">Bot de bienvenida inmediato</div><div class="flow-node-desc">Saludo automático + primeras preguntas de calificación sin espera.</div></div>
+        <div class="flow-connector"><div class="flow-line"></div><div class="flow-arrow"></div></div>
+        <div class="flow-node"><div class="flow-node-title">Calificación conversacional</div><div class="flow-node-desc">El flujo es el mismo que en la Entrada A, con mayor tasa de respuesta por ser más directo.</div></div>
+      </div>
     </div>
   </div>
 
   <div class="divider"></div>
-
-  <h3>B2B — Comercial (3 subsegmentos)</h3>
-
-  <div class="grid-3">
-    <div class="persona-card">
-      <div class="badge bw">B2B · Sub 1</div>
-      <div class="persona-name">El dueño de local único</div>
-      <div class="persona-age">35–55 años · comercio propio · 1 local</div>
-      <div class="persona-row"><span class="persona-key">Perfil</span><span class="persona-val">Kiosco, ferretería, farmacia, local de ropa, restaurante. Un solo local. Él mismo abre y cierra.</span></div>
-      <div class="persona-row"><span class="persona-key">Motivador</span><span class="persona-val">Protección ante robos fuera de horario. Saber si abrieron tarde o cerraron antes. Control de empleados.</span></div>
-      <div class="persona-row"><span class="persona-key">Objeción</span><span class="persona-val">"Sigo agregando costos fijos a mi negocio."</span></div>
-      <div class="persona-row"><span class="persona-key">Respuesta</span><span class="persona-val">Un robo le cuesta 10x más que 12 meses de abono. Y el sistema reduce el robo interno con el control de accesos.</span></div>
-      <div class="persona-row"><span class="persona-key">Kit sugerido</span><span class="persona-val">Kit Comercio CX 2.1</span></div>
+  <h3>Flujo principal desde la calificación</h3>
+  <div class="flow" style="max-width:560px;">
+    <div class="flow-node warn"><div class="flow-node-title">Calificación automática (chatbot)</div><div class="flow-node-desc">Preguntas: tipo de propiedad · zona · mascotas · aislante. El bot detecta el kit adecuado y agenda la llamada automáticamente.</div></div>
+    <div class="flow-connector"><div class="flow-line"></div><div class="flow-arrow"></div></div>
+    <div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;font-family:'Nunito',sans-serif;font-weight:600;">¿El lead responde?</div>
+      <div class="flow-branch">
+        <div>
+          <div style="font-size:10px;font-weight:700;color:var(--owl-teal);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;font-family:'Nunito',sans-serif;">→ Sí responde</div>
+          <div class="flow-node info"><div class="flow-node-title">Llamada de cierre</div><div class="flow-node-desc">10–15 min. Speech + Score Veraz + propuesta personalizada.</div></div>
+        </div>
+        <div>
+          <div style="font-size:10px;font-weight:700;color:var(--owl-orange);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;font-family:'Nunito',sans-serif;">→ No responde</div>
+          <div class="flow-node danger"><div class="flow-node-title">Secuencia de reactivación</div><div class="flow-node-desc">3 mensajes automáticos en 7 días. Si sigue sin responder: llamada de IA de voz.</div></div>
+        </div>
+      </div>
     </div>
-
-    <div class="persona-card">
-      <div class="badge bw">B2B · Sub 2</div>
-      <div class="persona-name">El empresario con múltiples sucursales</div>
-      <div class="persona-age">40–60 años · 2 a 10 locales</div>
-      <div class="persona-row"><span class="persona-key">Perfil</span><span class="persona-val">Red de sucursales de una misma marca o rubro. No puede estar en todos lados. Tiene gerentes zonales o encargados.</span></div>
-      <div class="persona-row"><span class="persona-key">Motivador</span><span class="persona-val">Visibilidad total de todas las sucursales desde un solo lugar. Control de apertura y cierre por horario.</span></div>
-      <div class="persona-row"><span class="persona-key">Diferencial</span><span class="persona-val">Consola Empresarial ADT: grupos por zona, alertas si abre tarde, video en tiempo real de cada local.</span></div>
-      <div class="persona-row"><span class="persona-key">Objeción</span><span class="persona-val">"Ya tengo cámaras en cada local."</span></div>
-      <div class="persona-row"><span class="persona-key">Kit sugerido</span><span class="persona-val">Kit Comercio CX 2.1 + cámara por sucursal</span></div>
-    </div>
-
-    <div class="persona-card">
-      <div class="badge bw">B2B · Sub 3</div>
-      <div class="persona-name">El encargado de galpón o depósito</div>
-      <div class="persona-age">Industria, logística, almacenamiento</div>
-      <div class="persona-row"><span class="persona-key">Perfil</span><span class="persona-val">Galpones, depósitos, plantas productivas o espacios sin aislante térmico. Zonas con fuentes de calor que invalidan los sensores estándar.</span></div>
-      <div class="persona-row"><span class="persona-key">Motivador</span><span class="persona-val">Proteger mercadería de alto valor. Control de acceso de camioneros y operarios en horarios definidos.</span></div>
-      <div class="persona-row"><span class="persona-key">Diferencial</span><span class="persona-val">Los kits CX 2.1 y Galpón 2.2 usan sensores de doble tecnología (movimiento + calor), aptos para ambientes con fuentes de calor.</span></div>
-      <div class="persona-row"><span class="persona-key">Kit sugerido</span><span class="persona-val">Kit Galpón CX 2.2 + cámara exterior</span></div>
-    </div>
+    <div class="flow-connector"><div class="flow-line"></div><div class="flow-arrow"></div></div>
+    <div class="flow-node accent"><div class="flow-node-title">Cierre y contrato digital</div><div class="flow-node-desc">Presupuesto → link de pago → foto DNI → firma electrónica. 100% digital, sin papel.</div></div>
+    <div class="flow-connector"><div class="flow-line"></div><div class="flow-arrow"></div></div>
+    <div class="flow-node"><div class="flow-node-title">Post-venta automatizada + referidos</div><div class="flow-node-desc">Mensaje automático a los 7 días. A los 30 días: solicitud de referidos con incentivo (1 mes bonificado).</div></div>
   </div>
 </section>
 
-<!-- ===== COMPETIDORES ===== -->
-<section class="section" id="competidores">
-  <div class="section-header">
-    <div class="section-tag">Omnix Security — Mercado</div>
-    <h1 class="section-title">Análisis competitivo</h1>
-    <p class="section-subtitle">Mapa completo de competidores directos, indirectos y futuros en el espacio de seguridad y smart home.</p>
-  </div>
-
-  <h3>Competidores directos — mismo producto, mismo cliente</h3>
-  <div class="grid-2">
-    <div class="card"><div class="badge bd">Alta amenaza</div><div class="card-title">Verisure Argentina</div><div class="comp-row"><span class="comp-label">Instagram</span><span class="comp-val">82K seguidores · 853 posts</span></div><div class="comp-row"><span class="comp-label">Diferencial</span><span class="comp-val">ZeroVision · vigilantes motorizados</span></div><div class="comp-row"><span class="comp-label">Debilidad</span><span class="comp-val">Precio alto · sin smart home</span></div><div class="comp-row"><span class="comp-label">Para Omnix</span><span class="comp-val">Competir en precio + visión de ecosistema</span></div></div>
-    <div class="card"><div class="badge bd">Alta amenaza</div><div class="card-title">ADT Argentina (venta directa)</div><div class="comp-row"><span class="comp-label">Facebook</span><span class="comp-val">95K seguidores</span></div><div class="comp-row"><span class="comp-label">Diferencial</span><span class="comp-val">Marca global · mayor cobertura geográfica</span></div><div class="comp-row"><span class="comp-label">Debilidad</span><span class="comp-val">Impersonal · burocrático · proceso lento</span></div><div class="comp-row"><span class="comp-label">Para Omnix</span><span class="comp-val">Mismo producto, mejor experiencia de compra</span></div></div>
-    <div class="card"><div class="badge bw">Amenaza media</div><div class="card-title">Prosegur Argentina</div><div class="comp-row"><span class="comp-label">Instagram</span><span class="comp-val">44K seguidores · 458 posts</span></div><div class="comp-row"><span class="comp-label">Diferencial</span><span class="comp-val">Marca conocida · historial en Argentina</span></div><div class="comp-row"><span class="comp-label">Debilidad</span><span class="comp-val">Corporativo · no digital-first · sin smart home</span></div><div class="comp-row"><span class="comp-label">Para Omnix</span><span class="comp-val">Agilidad, tecnología y visión de futuro</span></div></div>
-    <div class="card"><div class="badge bs">Oportunidad</div><div class="card-title">Otros agentes ADT</div><div class="comp-row"><span class="comp-label">Datos</span><span class="comp-val">Relevados en RRSS públicas (ver nota en Modelo)</span></div><div class="comp-row"><span class="comp-label">Instagram promedio</span><span class="comp-val">1.200–3.100 seguidores · muy poco contenido</span></div><div class="comp-row"><span class="comp-label">Debilidad</span><span class="comp-val">Sin estrategia digital, sin chatbot, sin CRM</span></div><div class="comp-row"><span class="comp-label">Para Omnix</span><span class="comp-val">La barra está muy baja — fácil de superar</span></div></div>
-  </div>
-
-  <h3>Competidores indirectos</h3>
-  <div class="grid-2">
-    <div class="card"><div class="badge bm">Indirecto</div><div class="card-title">Seguros del hogar</div><div class="card-body">Actúan post-evento, no previenen. Son complementarios — Omnix previene, el seguro cubre lo que igual pasó. No se excluyen.</div></div>
-    <div class="card"><div class="badge bm">Indirecto</div><div class="card-title">Alarmas comunitarias barriales</div><div class="card-body">Dependen de vecinos disponibles. Sin protocolo profesional. Omnix ofrece respuesta 24/7 con vínculo policial directo — no son comparables.</div></div>
-    <div class="card"><div class="badge bm">Indirecto</div><div class="card-title">Cámaras DIY (Ezviz, Arlo, Hikvision)</div><div class="card-body">Graban pero no actúan. Sin monitoreo ni central de respuesta. Pueden integrarse al ecosistema Omnix — son complementarias en la fase 2.</div></div>
-    <div class="card"><div class="badge bm">Indirecto</div><div class="card-title">LoJack Argentina</div><div class="card-body">Alarmas + monitoreo + rastreo vehicular. Marca menos masiva que ADT. Compite en hogares pero sin el posicionamiento tech de Omnix.</div></div>
-  </div>
-
-  <h3>Competidores futuros en smart home</h3>
-  <div class="highlight-box">
-    <strong>Brecha confirmada:</strong> Ningún competidor actual integra seguridad + domótica accesible + instalación profesional. Omnix puede ocupar ese espacio antes de que llegue un jugador con escala.
-  </div>
-  <div class="grid-2">
-    <div class="card"><div class="badge bb">Premium</div><div class="card-title">Haustech / Intelhome / Soul Hi</div><div class="card-body">Control4, KNX — proyectos de obra de alta gama inaccesibles para la clase media. Sin opción de entrada escalonada. Sin monitoreo.</div></div>
-    <div class="card"><div class="badge bb">Retail</div><div class="card-title">Frávega / Garbarino / Demasled</div><div class="card-body">Venden dispositivos sueltos, sin instalación ni integración. Omnix ofrece lo que ellos no pueden: el servicio completo llave en mano.</div></div>
-  </div>
-</section>
-
-<!-- ===== PRODUCTOS ===== -->
-<section class="section" id="productos">
-  <div class="section-header">
-    <div class="section-tag">Omnix Security — Producto</div>
-    <h1 class="section-title">Productos y precios</h1>
-    <p class="section-subtitle">Catálogo completo de kits ADT disponibles. Los equipos se entregan en comodato — solo se cobra instalación y abono mensual.</p>
-  </div>
-
-  <div class="warn-box"><strong>Importante:</strong> Los equipos son en comodato. Solo se cobra el costo de instalación y el abono mensual. Los adicionales (si el cliente los necesita) los compra directamente.</div>
-
-  <h3>Línea Climax — totalmente inalámbrica</h3>
-  <table class="data-table">
-    <thead><tr><th>Producto</th><th>Uso recomendado</th><th>Plan</th><th>Cuota/mes</th></tr></thead>
-    <tbody>
-      <tr><td>Climax Int. Sec. 1.1</td><td style="font-size:12px;color:var(--muted)">Casa con aislante · Comercio sin calor</td><td><span class="badge bp">Int. Security</span></td><td class="price-val">$70.900</td></tr>
-      <tr><td>Climax Int. Sec. 1.1 View</td><td style="font-size:12px;color:var(--muted)">Casa con aislante · Comercio sin calor</td><td><span class="badge ba">Int. Security View</span></td><td class="price-val">$79.900</td></tr>
-      <tr><td>Climax Int. Sec. 1.1 View Ext</td><td style="font-size:12px;color:var(--muted)">Casa con aislante · Comercio sin calor</td><td><span class="badge ba">Int. Security View</span></td><td class="price-val">$79.900</td></tr>
-      <tr><td>Climax Int. Sec. 2.2</td><td style="font-size:12px;color:var(--muted)">Casa con aislante · Comercio sin calor</td><td><span class="badge bp">Int. Security</span></td><td class="price-val">$70.900</td></tr>
-      <tr><td>Climax Int. Sec. 2.2 View</td><td style="font-size:12px;color:var(--muted)">Casa con aislante · Comercio sin calor</td><td><span class="badge ba">Int. Security View</span></td><td class="price-val">$79.900</td></tr>
-      <tr><td>Climax Int. Sec. 2.2 View Ext</td><td style="font-size:12px;color:var(--muted)">Casa con aislante · Comercio sin calor</td><td><span class="badge ba">Int. Security View</span></td><td class="price-val">$79.900</td></tr>
-    </tbody>
-  </table>
-
-  <h3>Línea Comercio y Galpón — doble tecnología</h3>
-  <table class="data-table">
-    <thead><tr><th>Producto</th><th>Uso recomendado</th><th>Plan</th><th>Cuota/mes</th></tr></thead>
-    <tbody>
-      <tr><td>Kit Comercio CX 2.1</td><td style="font-size:12px;color:var(--muted)">Casa sin aislante · Comercio con calor · Galpón</td><td><span class="badge bp">Int. Security</span></td><td class="price-val">$70.900</td></tr>
-      <tr><td>Kit Comercio CX 2.1 Cámara Ext</td><td style="font-size:12px;color:var(--muted)">Casa sin aislante · Comercio con calor · Galpón</td><td><span class="badge ba">Int. Security View</span></td><td class="price-val">$79.900</td></tr>
-      <tr><td>Kit Comercio CX 2.1 Cámara Int</td><td style="font-size:12px;color:var(--muted)">Casa sin aislante · Comercio con calor · Galpón</td><td><span class="badge ba">Int. Security View</span></td><td class="price-val">$79.900</td></tr>
-      <tr><td>Kit Galpón CX 2.2</td><td style="font-size:12px;color:var(--muted)">Casa sin aislante · Comercio con calor · Galpón</td><td><span class="badge bp">Int. Security</span></td><td class="price-val">$70.900</td></tr>
-      <tr><td>Kit Galpón CX 2.2 Cámara Ext</td><td style="font-size:12px;color:var(--muted)">Casa sin aislante · Comercio con calor · Galpón</td><td><span class="badge ba">Int. Security View</span></td><td class="price-val">$79.900</td></tr>
-      <tr><td>Kit Galpón CX 2.2 Cámara Int</td><td style="font-size:12px;color:var(--muted)">Casa sin aislante · Comercio con calor · Galpón</td><td><span class="badge ba">Int. Security View</span></td><td class="price-val">$79.900</td></tr>
-    </tbody>
-  </table>
-
-  <h3>Línea QOLSYS — panel inteligente (tope de gama)</h3>
-  <table class="data-table">
-    <thead><tr><th>Producto</th><th>Uso recomendado</th><th>Plan</th><th>Cuota/mes</th></tr></thead>
-    <tbody>
-      <tr><td>Int. Security 1.1 QOLSYS</td><td style="font-size:12px;color:var(--muted)">Casa con aislante · Comercio sin calor</td><td><span class="badge bp">Int. Security</span></td><td class="price-val">$70.900</td></tr>
-      <tr><td>Int. Security 2.2 QOLSYS</td><td style="font-size:12px;color:var(--muted)">Casa con aislante · Comercio sin calor</td><td><span class="badge bp">Int. Security</span></td><td class="price-val">$70.900</td></tr>
-      <tr><td>Int. Security Video View 1.1 QOLSYS</td><td style="font-size:12px;color:var(--muted)">Casa con aislante · Comercio sin calor</td><td><span class="badge ba">Int. Security View</span></td><td class="price-val">$79.900</td></tr>
-      <tr><td>Int. Security Video View 2.2 QOLSYS</td><td style="font-size:12px;color:var(--muted)">Casa con aislante · Comercio sin calor</td><td><span class="badge ba">Int. Security View</span></td><td class="price-val">$79.900</td></tr>
-      <tr><td>Int. Security Video View Ext 1.1 QOLSYS</td><td style="font-size:12px;color:var(--muted)">Casa con aislante · Comercio sin calor</td><td><span class="badge ba">Int. Security View</span></td><td class="price-val">$79.900</td></tr>
-      <tr><td>Int. Security Video View Ext 2.2 QOLSYS</td><td style="font-size:12px;color:var(--muted)">Casa con aislante · Comercio sin calor</td><td><span class="badge ba">Int. Security View</span></td><td class="price-val">$79.900</td></tr>
-      <tr><td>Kit Interactive 2.2 pircam</td><td style="font-size:12px;color:var(--muted)">Casa con aislante · Comercio sin calor</td><td><span class="badge bp">Int. Security</span></td><td class="price-val">$70.900</td></tr>
-    </tbody>
-  </table>
-</section>
-
-<!-- ===== VENTAS ===== -->
-<section class="section" id="ventas">
-  <div class="section-header">
-    <div class="section-tag">Omnix Security — Comercial</div>
-    <h1 class="section-title">Estrategia de ventas</h1>
-    <p class="section-subtitle">Basada en el Manual de Capacitación NTI/ADT, adaptada a la identidad y stack tecnológico de Omnix.</p>
-  </div>
-  <div class="highlight-box"><strong>El principio central:</strong> ADT no es una alarma, es una decisión que transforma el día a día. La venta empieza siempre por el beneficio emocional — tranquilidad, control, libertad — no por el producto técnico.</div>
-  <h3>Estructura del speech</h3>
-  <div class="card">
-    <div class="funnel-step"><div class="funnel-num" style="background:rgba(0,229,192,0.12);color:var(--accent);">1</div><div><div class="funnel-title">Contacto y presentación</div><div class="funnel-desc">Escucha activa: detectar provincia, localidad, situación de inseguridad. Generar familiaridad. No pedir datos sensibles todavía.</div></div></div>
-    <div class="funnel-step"><div class="funnel-num" style="background:rgba(0,229,192,0.12);color:var(--accent);">2</div><div><div class="funnel-title">Detección de necesidades</div><div class="funnel-desc">¿Tuvo problemas? ¿O es preventivo? Importante: presentar como herramienta multifuncional, no solo alarma — cuidado de adultos mayores, control de empleados, gestión de locales.</div></div></div>
-    <div class="funnel-step"><div class="funnel-num" style="background:rgba(0,229,192,0.12);color:var(--accent);">3</div><div><div class="funnel-title">3 atributos de marca clave</div><div class="funnel-desc">El cliente debe quedarse con 3 razones sólidas para elegir Omnix. Ej: monitoreo 24/7 · instalación en 24hs · control total desde la app.</div></div></div>
-    <div class="funnel-step"><div class="funnel-num" style="background:rgba(0,229,192,0.12);color:var(--accent);">4</div><div><div class="funnel-title">Score Veraz y propuesta</div><div class="funnel-desc">DNI para verificación crediticia. Propuesta según score. Venta agresiva: Omnix propone los tiempos, no el cliente.</div></div></div>
-    <div class="funnel-step"><div class="funnel-num" style="background:rgba(0,229,192,0.12);color:var(--accent);">5</div><div><div class="funnel-title">Contrato digital + post-venta</div><div class="funnel-desc">4 pasos: presupuesto → link de pago → foto DNI → firma electrónica. A los 30 días: activar programa de referidos.</div></div></div>
-  </div>
-  <h3>Las 5 objeciones principales y cómo responderlas</h3>
-  <div class="grid-2">
-    <div class="card"><div class="badge bw">Objeción 1</div><div class="card-title">"Prefiero contratar un seguro"</div><div class="card-body">El seguro actúa después del robo. Omnix previene. ¿Cómo reponer el valor sentimental de lo que se llevaron?</div></div>
-    <div class="card"><div class="badge bw">Objeción 2</div><div class="card-title">"Es muy caro"</div><div class="card-body">¿Comparado con qué? ¿Con el cable? ¿Con un atado de cigarrillos por día? El abono mensual de Omnix cuesta menos que muchos gastos cotidianos.</div></div>
-    <div class="card"><div class="badge bw">Objeción 3</div><div class="card-title">"Prefiero alarma comunitaria"</div><div class="card-body">La alarma comunitaria depende de vecinos disponibles. Omnix responde en segundos con protocolo profesional y contacto policial directo.</div></div>
-    <div class="card"><div class="badge bw">Objeción 4</div><div class="card-title">"Prefiero solo cámaras"</div><div class="card-body">Las cámaras graban pero no actúan. Son complemento del sistema, no sustituto. Sin alarma, nadie responde ante lo que grabaron.</div></div>
-  </div>
-</section>
-
-<!-- ===== FUNNEL ===== -->
-<section class="section" id="funnel">
-  <div class="section-header">
-    <div class="section-tag">Omnix Security — Comercial</div>
-    <h1 class="section-title">Embudo de conversión</h1>
-    <p class="section-subtitle">El flujo completo desde que un lead entra hasta que se convierte en cliente activo y referente.</p>
-  </div>
-  <div class="grid-2" style="margin-bottom:18px;">
-    <div class="metric-card"><div class="metric-value">&lt;2 min</div><div class="metric-label">Tiempo de respuesta objetivo</div></div>
-    <div class="metric-card"><div class="metric-value">-80%</div><div class="metric-label">Caída en conversión si tarda +5 min</div></div>
-  </div>
-  <div class="card">
-    <div class="funnel-step"><div class="funnel-num" style="background:rgba(59,130,246,0.12);color:#60A5FA;">100</div><div><div class="funnel-title">Captación (Meta Ads / Google / RRSS)</div><div class="funnel-desc">El lead hace clic y aterriza en la landing correspondiente (hogar o comercio). CTA claro: "Cotizá tu sistema" → WhatsApp directo.</div></div></div>
-    <div class="funnel-step"><div class="funnel-num" style="background:rgba(34,197,94,0.12);color:#86EFAC;">60</div><div><div class="funnel-title">Calificación automática — Chatbot WhatsApp</div><div class="funnel-desc"><strong>Preguntas clave:</strong> tipo de propiedad · zona · mascotas · aislante. El bot detecta el kit adecuado y agenda la llamada automáticamente. Si no responde: secuencia de reactivación (3 mensajes en 7 días).</div></div></div>
-    <div class="funnel-step"><div class="funnel-num" style="background:rgba(245,158,11,0.12);color:#FCD34D;">35</div><div><div class="funnel-title">Presentación y propuesta</div><div class="funnel-desc">Llamada de 10-15 min. Kit recomendado + Score Veraz con el DNI + propuesta con descuento en abono según scoring. Para B2B: videollamada con demo de la app.</div></div></div>
-    <div class="funnel-step"><div class="funnel-num" style="background:rgba(239,68,68,0.12);color:#FCA5A5;">15</div><div><div class="funnel-title">Cierre y contrato digital</div><div class="funnel-desc">Presupuesto → link de pago → foto DNI → firma electrónica. Manejo de objeciones en vivo. Omnix propone los tiempos.</div></div></div>
-    <div class="funnel-step"><div class="funnel-num" style="background:rgba(34,197,94,0.12);color:#86EFAC;">+3-5</div><div><div class="funnel-title">Post-venta y referidos</div><div class="funnel-desc">Mensaje automático a los 7 días. A los 30 días: solicitud de referidos con incentivo (1 mes bonificado). Cada cliente activo es un vendedor potencial.</div></div></div>
-  </div>
-</section>
-
-<!-- ===== ECOSISTEMA DIGITAL ===== -->
+<!-- ══════════════════════ ECOSISTEMA ══════════════════════ -->
 <section class="section" id="ecosistema">
   <div class="section-header">
-    <div class="section-tag">Marketing digital</div>
+    <div class="section-tag">11 · Ecosistema digital</div>
     <h1 class="section-title">Ecosistema digital</h1>
-    <p class="section-subtitle">Plataformas seleccionadas con base en datos de penetración en Argentina y efectividad para el rubro.</p>
+    <p class="section-subtitle">Plataformas seleccionadas con base en datos reales de penetración en Argentina y efectividad para el rubro.</p>
   </div>
   <h3>Plataformas core — activar desde el día 1</h3>
   <div class="grid-2">
-    <div class="platform-card priority"><div class="badge ba">Canal de cierre</div><div class="platform-name">WhatsApp Business API</div><div class="platform-stat">93%</div><div class="platform-stat-label">penetración en Argentina</div><div class="platform-desc"><strong>Columna vertebral del proceso de ventas.</strong> Chatbot, propuestas, link de pago y contrato. No es opcional.</div></div>
-    <div class="platform-card priority"><div class="badge ba">Captación + branding</div><div class="platform-name">Instagram</div><div class="platform-stat">86.7%</div><div class="platform-stat-label">penetración · 28.9M usuarios AR</div><div class="platform-desc"><strong>Principal canal visual.</strong> Reels educativos, casos de uso, testimonios. Alimenta Meta Ads con audiencias calientes.</div></div>
-    <div class="platform-card priority"><div class="badge bb">Paid media</div><div class="platform-name">Facebook + Meta Ads</div><div class="platform-stat">82.3%</div><div class="platform-stat-label">penetración · 29.1M usuarios AR</div><div class="platform-desc"><strong>Motor de paid media.</strong> Una campaña corre en FB + IG. Audiencia 35-60 años, ideal para residencial y comercios.</div></div>
-    <div class="platform-card priority"><div class="badge bw">Alta intención</div><div class="platform-name">Google Ads + SEO</div><div class="platform-stat">Alta</div><div class="platform-stat-label">intención de compra activa</div><div class="platform-desc"><strong>Captura demanda existente.</strong> Quien busca "alarma monitoreo" ya quiere comprar. Google Ads = resultados inmediatos.</div></div>
+    <div class="card" style="border-color:rgba(47,193,165,0.35);">
+      <div class="badge ba">Canal de cierre</div>
+      <div class="card-title">WhatsApp Business API</div>
+      <div style="font-family:'Nunito',sans-serif;font-size:24px;font-weight:800;color:var(--owl-teal);margin:6px 0 2px;">93%</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:10px;">penetración en Argentina — el más usado del país</div>
+      <div class="card-body"><strong>Columna vertebral del proceso de ventas.</strong> Chatbot de calificación, propuestas, link de pago y contrato digital. No es opcional, es el centro del funnel.</div>
+    </div>
+    <div class="card" style="border-color:rgba(47,193,165,0.35);">
+      <div class="badge ba">Captación + branding</div>
+      <div class="card-title">Meta — Instagram · Facebook · Threads</div>
+      <div style="font-family:'Nunito',sans-serif;font-size:24px;font-weight:800;color:var(--owl-teal);margin:6px 0 2px;">86.7%</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:10px;">penetración Instagram · 28.9M usuarios AR</div>
+      <div class="card-body"><strong>Motor de paid media y contenido orgánico.</strong> Una campaña Meta corre en IG + FB + Threads. Audiencia 30–60 años para residencial y dueños de comercios.</div>
+    </div>
+    <div class="card" style="border-color:rgba(187,237,32,0.25);">
+      <div class="badge bw">Alta intención</div>
+      <div class="card-title">Google Ads + SEO</div>
+      <div style="font-family:'Nunito',sans-serif;font-size:24px;font-weight:800;color:var(--owl-lime);margin:6px 0 2px;">Intención activa</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:10px;">el usuario ya quiere comprar cuando busca</div>
+      <div class="card-body"><strong>Captura demanda existente.</strong> Quien busca "alarma monitoreo [ciudad]" ya quiere comprar. Google Ads da resultado inmediato. SEO acumula tráfico sin costo por clic.</div>
+    </div>
+    <div class="card">
+      <div class="badge bm">Gratis · alta visibilidad</div>
+      <div class="card-title">Google Business Profile</div>
+      <div style="font-family:'Nunito',sans-serif;font-size:24px;font-weight:800;color:var(--muted);margin:6px 0 2px;">$0</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:10px;">configurar desde el día 1</div>
+      <div class="card-body">Aparece en "alarma monitoreo cerca de mí". Las reseñas de Google son prueba social antes del primer contacto.</div>
+    </div>
   </div>
-  <h3>Plataformas complementarias — activar en fase 2</h3>
-  <div class="grid-4">
-    <div class="platform-card"><div class="badge bm">B2B</div><div class="platform-name">LinkedIn</div><div class="platform-desc">Prospección directa a dueños de negocios. Contenido sobre control de sucursales.</div></div>
-    <div class="platform-card"><div class="badge bm">SEO</div><div class="platform-name">YouTube</div><div class="platform-desc">Videos indexados por Google. Demos de la app, instalaciones reales, tips de seguridad.</div></div>
-    <div class="platform-card"><div class="badge bm">Gratis</div><div class="platform-name">Google Business</div><div class="platform-desc">Perfil local gratuito. Aparece en búsquedas locales. Configurar el día 1.</div></div>
-    <div class="platform-card"><div class="badge bm">Opcional</div><div class="platform-name">TikTok</div><div class="platform-desc">Creciente en AR. Útil para contenido educativo-viral si hay recursos de producción.</div></div>
+  <h3>Plataformas complementarias — fase 2</h3>
+  <div class="grid-3">
+    <div class="card"><div class="badge bm">B2B</div><div class="card-title">LinkedIn</div><div class="card-body">Prospección directa a dueños de comercios y gerentes. Contenido sobre control operativo y eficiencia.</div></div>
+    <div class="card"><div class="badge bm">SEO largo plazo</div><div class="card-title">YouTube</div><div class="card-body">Videos indexados por Google. Demos de la app, instalaciones, tips. Tráfico orgánico sostenido.</div></div>
+    <div class="card"><div class="badge bm">Exploración</div><div class="card-title">TikTok</div><div class="card-body">58.4% penetración en AR. Crecimiento acelerado. Útil si hay capacidad de producción de contenido corto.</div></div>
   </div>
+  <div class="info-box"><strong>Meta vs Google:</strong> Meta crea demanda latente → Google la captura en el momento de búsqueda. Los dos se potencian. Recomendación: Meses 1–2 solo Meta Ads. Mes 3: sumar Google Ads. Mes 6: SEO empieza a dar resultados.</div>
 </section>
 
-<!-- ===== RRSS ===== -->
+<!-- ══════════════════════ RRSS ══════════════════════ -->
 <section class="section" id="rrss">
   <div class="section-header">
-    <div class="section-tag">Marketing digital</div>
+    <div class="section-tag">12 · Redes sociales</div>
     <h1 class="section-title">Redes sociales</h1>
-    <p class="section-subtitle">Estrategia editorial, tono y calendario. Una sola cuenta que habla a múltiples audiencias.</p>
+    <p class="section-subtitle">Una sola cuenta, múltiples audiencias. Los pilares de contenido orgánico que guían qué publicar y con qué intención.</p>
   </div>
-  <div class="highlight-box"><strong>Hallazgo clave:</strong> Ningún competidor en el segmento habla de smart home. Ninguno educa. Ninguno tiene tono cercano + tech al mismo tiempo. Ese espacio está completamente vacío. Omnix puede ser la primera marca del rubro con identidad digital diferenciada.</div>
-  <h3>Recursos necesarios para el área de redes</h3>
-  <div class="grid-2">
-    <div class="card">
-      <div class="badge bw">A definir</div>
-      <div class="card-title">Opción 1 — Contratar Social Media Manager</div>
-      <div class="card-body">Perfil dedicado que gestione las cuentas, produzca contenido y administre la comunidad. Ideal para mantener consistencia y velocidad de publicación. Puede ser remoto o part-time en etapa inicial.</div>
-    </div>
-    <div class="card">
-      <div class="badge bw">A definir</div>
-      <div class="card-title">Opción 2 — Agencia de Social Media</div>
-      <div class="card-body">Tercerizar la gestión a una agencia con experiencia en el rubro tech o seguridad. Mayor costo fijo pero menor curva de aprendizaje. Requiere brief de marca sólido para asegurar el tono correcto.</div>
-    </div>
+  <div class="highlight-box"><strong>Oportunidad real:</strong> Ningún competidor habla de smart home ni educa sobre tecnología. Ninguno tiene un tono cercano + tech al mismo tiempo. Ese espacio está vacío — Omnix puede ocuparlo desde el inicio.</div>
+  <h3>La regla de los tercios</h3>
+  <div class="grid-3" style="margin-bottom:24px;">
+    <div class="card" style="border-color:rgba(47,193,165,0.25);"><div class="badge ba">1/3</div><div class="card-title">Contenido residencial</div><div class="card-body">Familias, hogar, mascotas, convivencia. Tono emocional. Conecta con el miedo como motivador de compra.</div></div>
+    <div class="card" style="border-color:rgba(187,237,32,0.2);"><div class="badge bw">1/3</div><div class="card-title">Contenido comercial</div><div class="card-body">Negocios, locales, sucursales, control remoto. Tono funcional. Demos de la app, escenarios B2B reales.</div></div>
+    <div class="card" style="border-color:rgba(127,123,156,0.25);"><div class="badge bp">1/3</div><div class="card-title">Educación + Smart home</div><div class="card-body">Tips de seguridad, domótica, tecnología. Posiciona a Omnix como referente del ecosistema.</div></div>
   </div>
-  <h3>La regla de los tercios (contenido)</h3>
-  <div class="grid-3">
-    <div class="card"><div class="badge ba">1/3</div><div class="card-title">Contenido residencial</div><div class="card-body">Familias, hogar, mascotas. Tono emocional. Casos reales, testimonios de vecinos.</div></div>
-    <div class="card"><div class="badge bw">1/3</div><div class="card-title">Contenido comercial</div><div class="card-body">Negocios, locales, sucursales. Tono funcional. Demos de la app, escenarios B2B.</div></div>
-    <div class="card"><div class="badge bb">1/3</div><div class="card-title">Educación + Smart home</div><div class="card-body">Tips de seguridad, domótica, tecnología. Posiciona a Omnix como referente del sector.</div></div>
-  </div>
-  <h3>Calendario editorial semanal</h3>
-  <div class="grid-3">
-    <div class="cal-day"><div class="cal-day-name">Lunes</div><span class="badge bb" style="margin-bottom:6px;">Reel educativo 30s</span><div class="cal-desc">"¿Sabías que...?" sobre seguridad. Genera guardados y compartidos — mejor formato para alcance orgánico.</div><div class="cal-audience">Ambas audiencias</div></div>
-    <div class="cal-day"><div class="cal-day-name">Miércoles</div><span class="badge bw" style="margin-bottom:6px;">Caso de uso / Demo</span><div class="cal-desc">Alternar semanas: hogar vs. comercio. Mostrar la app en acción, instalación real, función del sistema.</div><div class="cal-audience">Según semana</div></div>
-    <div class="cal-day"><div class="cal-day-name">Viernes</div><span class="badge bs" style="margin-bottom:6px;">Prueba social</span><div class="cal-desc">Testimonio, reseña de Google, captura de WA de cliente satisfecho. Video de 30s tiene 10x más impacto que texto.</div><div class="cal-audience">Ambas audiencias</div></div>
-    <div class="cal-day"><div class="cal-day-name">Stories diarias</div><span class="badge bm" style="margin-bottom:6px;">Engagement diario</span><div class="cal-desc">Encuestas, preguntas, behind-the-scenes de instalaciones. Mantiene el alcance activo entre posts.</div><div class="cal-audience">Mantiene alcance</div></div>
-    <div class="cal-day"><div class="cal-day-name">Quincenal</div><span class="badge bp" style="margin-bottom:6px;">Smart home preview</span><div class="cal-desc">"Esto se viene en Omnix." Construye expectativa antes del lanzamiento de la nueva línea.</div><div class="cal-audience">Early adopters</div></div>
-  </div>
+  <h3>Pilares RRSS orgánicas</h3>
+  <div class="social-pillar"><div class="sp-num">1</div><div><div class="sp-title">Educación — "¿Sabías que...?"</div><div class="sp-desc">Tips cortos sobre seguridad, tecnología o uso del sistema. Genera guardados y compartidos. Tono experto pero accesible.</div><div class="sp-example">"¿Sabías que los sensores de movimiento funcionan con calor corporal? Por eso no sirven en galpones sin adaptarlos."</div></div></div>
+  <div class="social-pillar"><div class="sp-num">2</div><div><div class="sp-title">Caso de uso — cómo se usa en la vida real</div><div class="sp-desc">Mostrar el sistema funcionando en escenarios reales. Alternar entre hogar y comercio. La app ADT en acción.</div><div class="sp-example">"Así protege Omnix Safe un comercio con 2 sucursales: 1 app, control total, notificación si abre tarde."</div></div></div>
+  <div class="social-pillar"><div class="sp-num">3</div><div><div class="sp-title">Prueba social — testimonio real</div><div class="sp-desc">Testimonio de cliente, reseña de Google, captura de WA (con permiso). Video de 30 seg tiene impacto 10x superior al texto.</div><div class="sp-example">"Juan de Villa Urquiza instaló Omnix Safe hace 3 meses. Esto es lo que nos dijo."</div></div></div>
+  <div class="social-pillar"><div class="sp-num">4</div><div><div class="sp-title">Tecnología futura — preview smart home</div><div class="sp-desc">Contenido quincenal sobre lo que se viene. Construye expectativa y posiciona la marca más allá de la alarma antes del lanzamiento.</div><div class="sp-example">"¿Sabés que podés controlar las luces de tu casa con la misma app que tu alarma? Esto se viene en Omnix."</div></div></div>
+  <div class="social-pillar"><div class="sp-num">5</div><div><div class="sp-title">Stories diarias — engaging cotidiano</div><div class="sp-desc">Encuestas, preguntas, behind-the-scenes de instalaciones, novedades. Mantiene el alcance activo entre posts.</div><div class="sp-example">Encuesta: "¿Cuál es tu mayor preocupación de seguridad? A) Mi hogar B) Mi negocio C) Ambos"</div></div></div>
 </section>
 
-<!-- ===== WEB ===== -->
+<!-- ══════════════════════ WEB ══════════════════════ -->
 <section class="section" id="web">
   <div class="section-header">
-    <div class="section-tag">Marketing digital</div>
+    <div class="section-tag">13 · Sitio web</div>
     <h1 class="section-title">Sitio web y landing pages</h1>
-    <p class="section-subtitle">Un solo dominio, múltiples landings segmentadas. El sitio existe para una sola cosa: convertir visitantes en leads de WhatsApp.</p>
+    <p class="section-subtitle">Un solo dominio, múltiples landings segmentadas. El sitio existe para convertir visitantes en leads — no para informar.</p>
   </div>
-  <div class="warn-box"><strong>Distinción crítica:</strong> Omnix no necesita un sitio institucional. Necesita landings de conversión segmentadas por audiencia. Cada página tiene un único objetivo.</div>
-  <h3>Arquitectura: un dominio, múltiples entradas</h3>
-  <div class="card" style="margin-bottom:10px;border-color:rgba(0,229,192,0.3)"><div class="badge bb">Entrada principal</div><div class="card-title">omnix.com.ar — Selector de perfil</div><div class="card-body">"¿Qué querés proteger?" + 3 opciones visuales. Redirige a la landing específica. También tiene WhatsApp directo visible.</div></div>
-  <div class="grid-3" style="margin-bottom:10px;">
-    <div class="card"><div class="badge ba">omnix.com.ar/hogar</div><div class="card-title">Landing residencial</div><div class="card-body">Lenguaje emocional. Kits Climax y QOLSYS. Precio desde $70.900 visible. Formulario de 3 campos + WhatsApp flotante.</div></div>
-    <div class="card"><div class="badge bw">omnix.com.ar/comercio</div><div class="card-title">Landing comercial</div><div class="card-body">Lenguaje funcional: sucursales, control, horarios. Kits CX y Galpón. Consola empresarial como diferencial.</div></div>
-    <div class="card"><div class="badge bp">omnix.com.ar/smart-home</div><div class="card-title">Landing smart home</div><div class="card-body">Visión futura. Lista de espera para lanzamiento. Construye audiencia interesada antes de tener el producto.</div></div>
+  <div class="warn-box"><strong>Distinción clave:</strong> Omnix no necesita un sitio institucional. Necesita landings de conversión por segmento con un único objetivo: generar contacto por WhatsApp.</div>
+
+  <h3>Arquitectura — omnix.com.ar</h3>
+  <div class="flow" style="max-width:480px;margin:0 auto 24px;">
+    <div class="flow-node accent" style="text-align:center;"><div class="flow-node-title">omnix.com.ar — Home selector</div><div class="flow-node-desc">"¿Qué querés proteger?" → redirige al segmento correspondiente</div></div>
+    <div class="flow-connector"><div class="flow-line"></div><div class="flow-arrow"></div></div>
+    <div class="flow-branch">
+      <div class="flow-node"><div class="flow-node-title">/safe/hogar</div><div class="flow-node-desc">Tono emocional · Kits Climax / QOLSYS</div></div>
+      <div class="flow-node"><div class="flow-node-title">/safe/comercio</div><div class="flow-node-desc">Tono funcional · Kits CX · Consola</div></div>
+    </div>
+    <div class="flow-connector"><div class="flow-line"></div><div class="flow-arrow"></div></div>
+    <div class="flow-node warn" style="text-align:center;"><div class="flow-node-title">CTA siempre visible</div><div class="flow-node-desc">Botón WhatsApp flotante + formulario de 3 campos en cada landing</div></div>
   </div>
-  <h3>Requerimientos técnicos obligatorios</h3>
+
+  <h3>Diferencias clave entre landing hogar y comercio</h3>
   <div class="grid-2">
-    <div class="card"><div class="badge bd">Crítico</div><div class="card-title">Velocidad &lt;3 segundos</div><div class="card-body">Cada segundo extra reduce la conversión un 7%. Imágenes WebP, hosting rápido, caché. Prioridad en mobile.</div></div>
-    <div class="card"><div class="badge bd">Crítico</div><div class="card-title">100% mobile-first</div><div class="card-body">+80% del tráfico de Meta Ads llega desde celular. Botones táctiles grandes, formularios cortos, WA flotante siempre visible.</div></div>
-    <div class="card"><div class="badge bd">Crítico</div><div class="card-title">Pixel Meta + GA4 desde día 1</div><div class="card-body">Sin pixel no hay retargeting. Sin GA4 no sabés de dónde vienen los leads. Configurar antes de gastar el primer peso en publicidad.</div></div>
-    <div class="card"><div class="badge bw">Importante</div><div class="card-title">Integración CRM automática</div><div class="card-body">Cada formulario va directo al CRM sin intervención manual. Si el lead espera +5 minutos, la conversión cae un 80%.</div></div>
+    <div class="card">
+      <div class="card-title">Landing hogar</div>
+      <div class="card-body" style="font-size:13px;line-height:1.9;">
+        <strong>Hero:</strong> imagen de familia, no de equipo técnico<br>
+        <strong>Copy:</strong> "dormí tranquilo", "tu familia protegida"<br>
+        <strong>Objeciones:</strong> precio, mascotas, falsos disparos<br>
+        <strong>Kits:</strong> Climax 1.1 / 2.2 y QOLSYS<br>
+        <strong>CTA:</strong> "Cotizá para tu hogar"
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Landing comercio</div>
+      <div class="card-body" style="font-size:13px;line-height:1.9;">
+        <strong>Hero:</strong> imagen de local o comercio<br>
+        <strong>Copy:</strong> "controlá tu negocio desde el celu"<br>
+        <strong>Objeciones:</strong> costo fijo, ya tengo cámaras<br>
+        <strong>Kits:</strong> CX 2.1, Galpón 2.2, Consola empresarial<br>
+        <strong>CTA:</strong> "Protegé tu negocio"
+      </div>
+    </div>
+  </div>
+
+  <h3>Requerimientos técnicos</h3>
+  <div class="info-box">Los requerimientos que siguen son estándares de la industria para sitios de generación de leads. Son las condiciones mínimas para que una inversión en publicidad digital tenga retorno real.</div>
+  <div class="grid-2">
+    <div class="card"><div class="badge bd">Crítico</div><div class="card-title">Velocidad &lt;3 seg + mobile-first</div><div class="card-body">+80% del tráfico de Meta Ads llega desde celular. Cada segundo extra reduce la conversión un 7%. Imágenes WebP, hosting rápido, caché.</div></div>
+    <div class="card"><div class="badge bd">Crítico</div><div class="card-title">Pixel Meta + GA4 desde día 1</div><div class="card-body">Sin pixel no hay retargeting ni lookalike audiences. Sin GA4 no sabés de dónde vienen los leads. Configurar antes de gastar en publicidad.</div></div>
+    <div class="card"><div class="badge bw">Importante</div><div class="card-title">Integración CRM en tiempo real</div><div class="card-body">Cada formulario enviado debe llegar al CRM sin intervención manual. Si el lead espera más de 5 minutos, la conversión cae un 80%.</div></div>
+    <div class="card"><div class="badge bw">Importante</div><div class="card-title">Política de privacidad + SSL</div><div class="card-body">Obligatorio para Meta Ads y Google Ads. HTTPS es requerimiento de seguridad básico — los navegadores marcan como "No seguro" los sitios sin él.</div></div>
   </div>
 </section>
 
-<!-- ===== FASES ===== -->
-<section class="section" id="fases">
-  <div class="section-header">
-    <div class="section-tag">Ejecución</div>
-    <h1 class="section-title">Fases de lanzamiento</h1>
-    <p class="section-subtitle">Plan de ejecución por prioridad. Qué se hace primero y los hitos de validación antes de escalar.</p>
-  </div>
-  <div class="card">
-    <div class="roadmap-item"><div class="roadmap-phase" style="background:rgba(245,158,11,0.15);color:#FCD34D;">Fase 1 · Sem 1-3</div><div><div class="roadmap-title">Fundaciones</div><div class="roadmap-desc">Constitución legal. Identidad visual (tercerizado). Email corporativo. Google Business configurado. Acuerdo comercial con NTI.</div></div></div>
-    <div class="roadmap-item"><div class="roadmap-phase" style="background:rgba(59,130,246,0.15);color:#60A5FA;">Fase 2 · Sem 3-7</div><div><div class="roadmap-title">Infraestructura digital</div><div class="roadmap-desc">Landing hogar + Landing comercio. WhatsApp Business API + chatbot de calificación + flujos conversacionales. CRM. Pixel Meta + GA4. Incorporar o contratar área de Redes Sociales / Social Media.</div></div></div>
-    <div class="roadmap-item"><div class="roadmap-phase" style="background:rgba(34,197,94,0.15);color:#86EFAC;">Fase 3 · Sem 7-12</div><div><div class="roadmap-title">Lanzamiento y primeras ventas</div><div class="roadmap-desc">Meta Ads: $150-300 USD/mes inicial, segmentado por zona. RRSS: 3 posts/semana + stories diarias. Meta: 10 instalaciones en los primeros 60 días.</div></div></div>
-    <div class="roadmap-item"><div class="roadmap-phase" style="background:rgba(122,122,154,0.15);color:#9A9ABD;">Fase 4 · Mes 3+</div><div><div class="roadmap-title">Escala</div><div class="roadmap-desc">Agregar Google Ads. SEO local. Prospección B2B activa. Lanzamiento de cámaras inteligentes como segundo producto. Landing smart home con lista de espera.</div></div></div>
-  </div>
-</section>
-
-<!-- ===== EQUIPO ===== -->
+<!-- ══════════════════════ EQUIPO ══════════════════════ -->
 <section class="section" id="equipo">
   <div class="section-header">
-    <div class="section-tag">Ejecución</div>
+    <div class="section-tag">14 · Equipo y recursos</div>
     <h1 class="section-title">Equipo y recursos</h1>
-    <p class="section-subtitle">Qué roles son necesarios para operar Omnix en cada fase de crecimiento.</p>
+    <p class="section-subtitle">Los roles necesarios para operar Omnix en sus distintas etapas. Algunos pueden ser internos, otros tercerizados o mixtos.</p>
   </div>
-
-  <h3>Recursos disponibles (confirmados)</h3>
   <div class="grid-2">
-    <div class="card"><div class="badge bs">Disponible</div><div class="card-title">Capital propio</div><div class="card-body">Inversión inicial para desarrollo de marca, infraestructura digital y primeras campañas de publicidad.</div></div>
-    <div class="card"><div class="badge bs">Disponible</div><div class="card-title">Equipo tech de alto nivel</div><div class="card-body">Capacidad para desarrollar o configurar el stack tecnológico: chatbot, automatizaciones, IA de llamadas, integraciones.</div></div>
-    <div class="card"><div class="badge bs">Disponible</div><div class="card-title">Chatbot y llamadas automatizadas</div><div class="card-body">Infraestructura de conversación automatizada ya contemplada. Definir flujos conversacionales y scripting.</div></div>
-    <div class="card"><div class="badge bs">Disponible</div><div class="card-title">Capacidad de IA</div><div class="card-body">Herramientas de IA para calificación de leads, reactivación y análisis de conversiones.</div></div>
-  </div>
-
-  <h3>Recursos por contratar o desarrollar</h3>
-  <div class="grid-2">
-    <div class="card"><div class="badge bd">Pendiente</div><div class="card-title">Social Media Manager / Agencia</div><div class="card-body">Gestión de Instagram, Facebook y demás plataformas. Producción de contenido, community management, reporte de métricas. Puede ser un perfil propio o una agencia especializada.</div></div>
-    <div class="card"><div class="badge bd">Pendiente</div><div class="card-title">Desarrollo de flujos conversacionales</div><div class="card-body">Diseño del script del chatbot de calificación, flujos de reactivación, respuestas ante objeciones frecuentes. Requiere conocimiento del speech de ventas ADT.</div></div>
-    <div class="card"><div class="badge bw">Por definir</div><div class="card-title">Vendedor / Closer humano</div><div class="card-body">Para la etapa de presentación y cierre (etapa 3 del funnel). Puede ser el mismo dueño en la fase inicial, o un perfil comercial dedicado al escalar.</div></div>
-    <div class="card"><div class="badge bw">Por definir</div><div class="card-title">Instaladores técnicos</div><div class="card-body">Coordinación de la instalación. Definir si se trabaja con instaladores propios, subcontratados o los que provee NTI/ADT según la zona.</div></div>
+    <div class="card"><div class="badge ba">Comercial · Fase 1</div><div class="card-title">Vendedor / Closer</div><div class="card-body">Responsable del cierre de ventas: llamadas de propuesta, manejo de objeciones, seguimiento de leads calificados. Conoce el speech adaptado a Omnix Safe y el Manual NTI.</div></div>
+    <div class="card"><div class="badge ba">Operaciones · Fase 1</div><div class="card-title">Coordinador de instalaciones</div><div class="card-body">Gestión de agenda con los instaladores de ADT/NTI. Punto de contacto entre el cliente post-venta y el equipo técnico. Coordinador, no instalador.</div></div>
+    <div class="card"><div class="badge bw">Marketing · Fase 1</div><div class="card-title">Gestión de pauta (Ads)</div><div class="card-body">Meta Ads y Google Ads. Presupuesto inicial recomendado: USD 150–300/mes en medios. Puede ser freelance o agencia en la etapa inicial.</div></div>
+    <div class="card"><div class="badge bw">Marketing · Fase 1</div><div class="card-title">Automatización y flujos (chatbot + CRM)</div><div class="card-body">Configuración y mantenimiento del chatbot, secuencias de reactivación y CRM. Perfil técnico — puede ser tercerizado.</div></div>
+    <div class="card"><div class="badge bp">Marketing · Fase 2</div><div class="card-title">Equipo de desarrollo y creación de contenido</div><div class="card-body">Diseñador gráfico, editor de video, productor de Reels. En el caso de ir interno, este equipo sostiene el calendario editorial y los materiales de campaña.</div></div>
+    <div class="card" style="border-color:rgba(255,66,30,0.3);background:rgba(255,66,30,0.04);">
+      <div class="badge bo">Estrategia · Fase 2</div>
+      <div class="card-title">Growth Marketing</div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:14px;">A incorporar una vez terminada la primera etapa de lanzamiento. Estrategia de crecimiento, análisis de performance, optimización de embudos y expansión de canales.</div>
+      <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--surface);border-radius:8px;border:1px solid rgba(255,66,30,0.2);">
+        <div style="width:30px;height:30px;background:var(--owl-orange);border-radius:4px 4px 4px 12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="5.5" r="2.5" fill="white"/><path d="M2 12c0-2.76 2.24-5 5-5s5 2.24 5 5" stroke="white" stroke-width="1.5" stroke-linecap="round" fill="none"/></svg>
+        </div>
+        <div>
+          <div style="font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;color:#fff;">Owlbox</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.4);">owlbox.io · Growth Marketing · Córdoba, AR</div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
-<!-- ===== STACK ===== -->
-<section class="section" id="stack">
+<!-- ══════════════════════ CONTENIDOS ══════════════════════ -->
+<section class="section" id="contenidos">
   <div class="section-header">
-    <div class="section-tag">Ejecución</div>
-    <h1 class="section-title">Stack tecnológico</h1>
-    <p class="section-subtitle">Las herramientas que permiten a Omnix escalar sin aumentar proporcionalmente el equipo humano.</p>
+    <div class="section-tag">15 · Estrategia de contenidos</div>
+    <h1 class="section-title">Estrategia y plan de contenidos</h1>
+    <p class="section-subtitle">En desarrollo.</p>
   </div>
-  <div class="grid-2">
-    <div class="card"><div class="badge ba">Conversación</div><div class="card-title">Manychat o Respond.io</div><div class="card-body">WhatsApp Business API. Flujo de calificación → agenda llamada en Google Calendar. Secuencia de reactivación automática para leads fríos.</div></div>
-    <div class="card"><div class="badge bb">CRM</div><div class="card-title">Kommo (ex amoCRM) o HubSpot</div><div class="card-body">Pipeline: Nuevo → Calificado → Propuesta → Cierre → Instalado → Referido. Integrado con el chatbot para asignación automática.</div></div>
-    <div class="card"><div class="badge bp">IA de voz</div><div class="card-title">Twilio + Vapi.ai o Bland.ai</div><div class="card-body">Llamadas automáticas para reactivación de leads fríos. Un agente de IA puede contactar 200 leads en 1 hora.</div></div>
-    <div class="card"><div class="badge bw">Automatización</div><div class="card-title">Make (ex Integromat)</div><div class="card-body">Conecta todo el stack: lead en Meta Ads → CRM → WA automático → si no responde en 24hs → llamada de IA.</div></div>
-    <div class="card"><div class="badge bs">Analítica</div><div class="card-title">Google Analytics 4 + Meta Pixel</div><div class="card-body">GA4 para comportamiento en el sitio. Pixel para retargeting y audiencias lookalike. Configurar antes de la primera campaña.</div></div>
-    <div class="card"><div class="badge bm">Contratos</div><div class="card-title">Contrato electrónico ADT</div><div class="card-body">Sistema provisto por NTI/ADT. 4 pasos: presupuesto → link de pago → foto DNI → firma electrónica. 100% digital.</div></div>
+  <div style="padding:40px 24px;text-align:center;border:1px dashed rgba(127,123,156,0.25);border-radius:14px;background:rgba(62,15,88,0.15);">
+    <div style="width:48px;height:48px;background:rgba(47,193,165,0.12);border-radius:8px 8px 8px 20px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="3" y="3" width="16" height="16" rx="3" stroke="#2FC1A5" stroke-width="1.5"/><line x1="7" y1="8" x2="15" y2="8" stroke="#2FC1A5" stroke-width="1.5" stroke-linecap="round"/><line x1="7" y1="11" x2="15" y2="11" stroke="#2FC1A5" stroke-width="1.5" stroke-linecap="round"/><line x1="7" y1="14" x2="11" y2="14" stroke="#2FC1A5" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </div>
+    <div style="font-family:'Nunito',sans-serif;font-size:16px;font-weight:800;color:#fff;margin-bottom:8px;">En desarrollo</div>
+    <div style="font-size:13px;color:var(--muted);line-height:1.7;max-width:480px;margin:0 auto;">La estrategia de contenidos y el plan editorial se construirán como próxima etapa, una vez definida la identidad visual y el nombre de la línea de seguridad. Incluirá: calendario editorial mes a mes, guía de tono y voz de marca, formatos por plataforma, proceso de producción y métricas de seguimiento.</div>
   </div>
-  <div class="divider"></div>
-  <div class="info-box"><strong>Ventaja competitiva real:</strong> Chatbot + IA de voz + automatización permite responder leads en &lt;2 minutos, reactivar fríos automáticamente y escalar a 100+ leads/mes sin aumentar el equipo de ventas. Ningún otro agente ADT en Argentina tiene este stack.</div>
 </section>
 
 </main>
 </div>
 
 <script>
-function showSection(id){
-  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-  document.querySelectorAll('.nav-item,.nav-sub').forEach(n=>n.classList.remove('active'));
-  const s=document.getElementById(id);
-  if(s)s.classList.add('active');
-  if(event&&event.currentTarget)event.currentTarget.classList.add('active');
+function nav(id, el) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const s = document.getElementById(id);
+  if (s) s.classList.add('active');
+  if (el) el.classList.add('active');
   window.scrollTo(0,0);
-  if(window.innerWidth<640)document.getElementById('sidebar').classList.remove('open');
+  if (window.innerWidth < 640) document.getElementById('sidebar').classList.remove('open');
 }
-function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');}
-document.addEventListener('click',function(e){
-  const sb=document.getElementById('sidebar');
-  if(window.innerWidth<640&&sb.classList.contains('open')&&!sb.contains(e.target)&&!e.target.closest('.hamburger'))sb.classList.remove('open');
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+function toggleObj(header) {
+  const body = header.nextElementSibling;
+  const toggle = header.querySelector('.obj-toggle');
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  toggle.classList.toggle('open', !isOpen);
+}
+document.addEventListener('click', function(e) {
+  const sidebar = document.getElementById('sidebar');
+  if (window.innerWidth < 640 && sidebar.classList.contains('open')) {
+    if (!sidebar.contains(e.target) && !e.target.closest('.hamburger')) sidebar.classList.remove('open');
+  }
 });
 </script>
 </body>
